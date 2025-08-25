@@ -1,3 +1,4 @@
+'use client'
 import { useState, useEffect } from "react";
 import {
   ArrowRight,
@@ -17,12 +18,21 @@ import {
 import { useRouter } from "next/navigation";
 import Button from "../../components/ui/Button";
 
+interface FormData {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  fullName: string;
+  phone: string;
+  userType: string;
+}
+
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
     confirmPassword: "",
@@ -32,6 +42,17 @@ const AuthPage = () => {
   });
 
   const router = useRouter();
+
+  // Placeholder authentication functions
+  const login = async (email: string, password: string) => {
+    // TODO: Implement actual authentication
+    return { success: true };
+  };
+
+  const signup = async (formData: FormData) => {
+    // TODO: Implement actual authentication
+    return { success: true };
+  };
 
   // Check URL parameters on component mount to determine initial state
   useEffect(() => {
@@ -45,7 +66,7 @@ const AuthPage = () => {
     }
   }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -87,7 +108,7 @@ const AuthPage = () => {
     return true;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -135,7 +156,7 @@ const AuthPage = () => {
 
   const handleBackToHome = () => {
     // Navigate back to landing page
-    navigate("/");
+    router.push("/");
   };
 
   const handleDemoLogin = () => {
@@ -482,19 +503,19 @@ const AuthPage = () => {
                 <div className="flex justify-center">
                   <Button
                     type="submit"
-                    icon={ArrowRight}
+                    icon={<ArrowRight className="w-4 h-4" />}
                     className="hover:shadow-lg transform"
                     disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        {isLogin ? "Signing In..." : "Creating Account..."}
-                      </div>
-                    ) : (
-                      <>{isLogin ? "Sign In" : "Create Account"}</>
-                    )}
-                  </Button>
+                    title={
+                      isLoading
+                        ? isLogin
+                          ? "Signing In..."
+                          : "Creating Account..."
+                        : isLogin
+                        ? "Sign In"
+                        : "Create Account"
+                    }
+                  />
                 </div>
 
                 {!isLogin && (

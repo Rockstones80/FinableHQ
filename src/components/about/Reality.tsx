@@ -21,7 +21,7 @@ const CTASection: React.FC<CTASectionProps> = () => {
       <div className="relative z-10 flex items-center justify-center min-h-[55vh]">
         <div className="max-w-4xl mx-auto text-center text-black">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
-            Ready to Turn Your Dreams into Reality?
+            Ready to Turn Your <span className='text-green-600'>Dreams</span> into <span className=' text-green-600'>Reality?</span>
           </h2>
           <p className="text-lg mb-9 text-gray-700 font-medium leading-relaxed">
             Join thousands of Nigerians who have successfully funded their projects through Finable

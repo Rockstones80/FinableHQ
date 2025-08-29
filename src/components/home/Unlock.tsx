@@ -5,18 +5,18 @@ import Image from "next/image";
 import Button from "../ui/Button";
 // import { GraduationCap, Users } from "lucide-react";
 import graduating_picture from "../../../public/images/Unlock/graduating_picture.jpg";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const Unlock = () => {
-  const router = useRouter();
+  // const router = useRouter();
 
-  const navigateToStartCampaign = (): void => {
-    router.push("/auth/login");
-  };
+  // // const navigateToStartCampaign = (): void => {
+  // //   router.push("/auth/login");
+  // // };
 
-  const navigateToDonate = (): void => {
-    router.push("/donate");
-  };
+  // // const navigateToDonate = (): void => {
+  // //   router.push("/donate");
+  // // };
   
   return (
     <div className="bg-gradient-to-br from-green-50 to-white relative overflow-hidden mb-10">

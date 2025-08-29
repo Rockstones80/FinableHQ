@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { CiMenuFries } from "react-icons/ci";
@@ -14,24 +14,24 @@ type NavbarProps = object
 const Navbar: React.FC<NavbarProps> = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  // const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<DropdownType>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Toggle this to test logged in state
 
-  useEffect(() => {
-    const handleScroll = (): void => {
-      if (window.scrollY > 5) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
+  // useEffect(() => {
+  //   // const handleScroll = (): void => {
+  //   //   if (window.scrollY > 5) {
+  //   //     setIsScrolled(true);
+  //   //   } else {
+  //   //     setIsScrolled(false);
+  //   //   }
+  //   // };
 
-    window.addEventListener("scroll", handleScroll);
+  // //   window.addEventListener("scroll", handleScroll);
 
-    // Cleanup
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  // //   // Cleanup
+  // //   return () => window.removeEventListener("scroll", handleScroll);
+  // // }, []);
 
   const toggleNavbar = (): void => {
     setIsOpen(!isOpen);
@@ -65,17 +65,17 @@ const Navbar: React.FC<NavbarProps> = () => {
     closeDropdowns();
   };
 
-  const handleStartCampaign = (): void => {
-    router.push('/auth?mode=login');
-    closeDropdowns();
-    setIsOpen(false);
-  };
+  // const handleStartCampaign = (): void => {
+  //   router.push('/auth?mode=login');
+  //   closeDropdowns();
+  //   setIsOpen(false);
+  // };
 
-  const handleHowToGive = (): void => {
-    router.push('/how-it-works');
-    closeDropdowns();
-    setIsOpen(false);
-  };
+  // const handleHowToGive = (): void => {
+  //   router.push('/how-it-works');
+  //   closeDropdowns();
+  //   setIsOpen(false);
+  // };
 
   return (
     <div

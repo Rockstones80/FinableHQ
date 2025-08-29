@@ -5,7 +5,7 @@ interface HeroSectionProps {
   scrollToSection: (sectionId: string) => void;
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ scrollToSection }) => {
+const HeroSection: React.FC<HeroSectionProps> = () => {
   return (
     <>
       <style jsx>{`

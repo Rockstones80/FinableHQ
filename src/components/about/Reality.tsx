@@ -1,5 +1,4 @@
 // components/about/CTASection.tsx
-import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import young_students from "../../../public/images/service/young_students.jpg";
 
@@ -7,7 +6,7 @@ interface CTASectionProps {
   backgroundImage: string;
 }
 
-const CTASection: React.FC<CTASectionProps> = ({ backgroundImage }) => {
+const CTASection: React.FC<CTASectionProps> = () => {
   return (
     <section className="relative py-4 mx-40 my-16 bg-white ">
       <div className="absolute inset-0 opacity-40">

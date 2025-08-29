@@ -44,12 +44,12 @@ const AuthPage = () => {
   const router = useRouter();
 
   // Placeholder authentication functions
-  const login = async (email: string, password: string) => {
+  const login = async () => {
     // TODO: Implement actual authentication
     return { success: true };
   };
 
-  const signup = async (formData: FormData) => {
+  const signup = async () => {
     // TODO: Implement actual authentication
     return { success: true };
   };
@@ -117,17 +117,16 @@ const AuthPage = () => {
     setError("");
 
     try {
-      let result;
 
       if (isLogin) {
-        result = await login(formData.email, formData.password);
+       await login();
       } else {
-        result = await signup(formData);
+        await signup();
       }
 
       // Placeholder for authentication logic
       router.push("/dashboard");
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);

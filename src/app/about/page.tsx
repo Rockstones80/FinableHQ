@@ -14,7 +14,7 @@ const page = () => {
         <MissionVisionSection />
         <ServicesSection />
         <FeaturesSection />
-        <CTASection />
+        <CTASection backgroundImage="" />
     </div>
   )
 }

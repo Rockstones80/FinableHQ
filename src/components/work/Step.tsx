@@ -12,8 +12,7 @@ import {
   CreditCard,
   Bell,
   Star,
-  ArrowRight,
-  LucideIcon,
+  LucideIcon
 } from "lucide-react";
 import Button from "../ui/Button";
 

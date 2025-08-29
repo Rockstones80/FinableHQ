@@ -30,6 +30,17 @@ const features = [
 const Discover: React.FC = () => {
   return (
     <div className=" px-20 flex flex-col justify-center items-center my-16">
+       <style jsx>{`
+        .glow-effect {
+          box-shadow: 0 2px 20px rgba(16, 185, 129, 0.08);
+          transition: all 0.3s ease;
+        }
+        
+        .glow-effect:hover {
+          box-shadow: 0 6px 30px rgba(16, 185, 129, 0.15);
+          transform: translateY(-2px);
+        }
+          `}</style>
       <div className=" text-center">
         <p className="text-5xl font-extrabold mb-4">
           Discover the Features of{" "}
@@ -47,7 +58,7 @@ const Discover: React.FC = () => {
           {features.map((feature, index) => {
             return (
               <li key={index} className="">
-                <div className="py-4 px-2 h-full w-full max-w-80 bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 pb-10 ">
+                <div className="py-4 px-2 h-full w-full max-w-80 bg-white rounded-lg glow-effect shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 pb-10 ">
                   <div className="h-52 mb-8 rounded-t-lg ">
                     <Image
                       src={feature.image}

@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { CiMenuFries } from "react-icons/ci";
 import { TfiClose } from "react-icons/tfi";
 import { User, ChevronDown, LogOut, Settings, Heart, CreditCard, Bell } from 'lucide-react';
-import Button from "../ui/Button";
 
 type DropdownType = 'students' | 'donors' | 'userMenu' | null;
 
@@ -66,11 +65,21 @@ const Navbar: React.FC<NavbarProps> = () => {
     closeDropdowns();
   };
 
+  const handleStartCampaign = (): void => {
+    router.push('/auth?mode=login');
+    closeDropdowns();
+    setIsOpen(false);
+  };
+
+  const handleHowToGive = (): void => {
+    router.push('/how-it-works');
+    closeDropdowns();
+    setIsOpen(false);
+  };
+
   return (
     <div
-      className={`lg:px-20 px-6 md:px-10 py-7 ${
-        isScrolled ? 'bg-white/95 backdrop-blur-sm shadow-sm' : ''
-      }`}
+      className=" lg:px-20 px-6 md:px-10 py-5"
     >
       <div className="flex justify-between items-center">
         {/* Logo - Center */}
@@ -93,10 +102,10 @@ const Navbar: React.FC<NavbarProps> = () => {
             How It Works
           </Link>
           <Link
-            href="/success-stories"
+            href="/pricing"
             className="relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-gray-600 after:transition-all after:duration-500 hover:after:w-full"
           >
-            Success Stories
+            Pricing
           </Link>
           <Link
             href="/about"
@@ -118,12 +127,12 @@ const Navbar: React.FC<NavbarProps> = () => {
                 Login
               </button>
               <div>
-                <Button
+                <button
                   onClick={handleSignup}
                   className="bg-primary py-[7px] px-6 text-white bg-green-600 cursor-pointer shadow-md rounded-sm transition-transform hover:-translate-y-1"
                 >
                   Sign up
-                </Button>
+                </button>
               </div>
             </>
           ) : (
@@ -233,25 +242,24 @@ const Navbar: React.FC<NavbarProps> = () => {
               </Link>
             </ul>
 
+          
             {/* Mobile Auth Section */}
             {!isLoggedIn ? (
-              <div className="flex flex-col items-center gap-6 mt-9 py-6 text-primary font-semibold text-[16px]">
+              <div
+                className="flex flex-col items-center gap-6 mt-9 py-6 text-primary font-semibold text-[16px]"
+                onClick={closeMenu}
+              >
                 <button 
-                  onClick={() => {
-                    handleLogin();
-                    closeMenu();
-                  }}
+                  onClick={handleLogin}
+                  className=""
                 >
                   Login
                 </button>
                 <div>
                   <button
                     type="button"
-                    onClick={() => {
-                      handleSignup();
-                      closeMenu();
-                    }}
-                    className="bg-primary py-[7px] px-6 text-white bg-green-600 cursor-pointer shadow-md rounded-sm transition-transform hover:-translate-y-1"
+                    onClick={handleSignup}
+                      className="bg-primary py-[7px] px-6 text-white bg-green-600 cursor-pointer shadow-md rounded-sm transition-transform hover:-translate-y-1"
                   >
                     Sign up
                   </button>

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { CiMenuFries } from "react-icons/ci";
 import { TfiClose } from "react-icons/tfi";
 import { User, ChevronDown, LogOut, Settings, Heart, CreditCard, Bell } from 'lucide-react';
+import Button from "../ui/Button";
 
 type DropdownType = 'students' | 'donors' | 'userMenu' | null;
 
@@ -65,21 +66,11 @@ const Navbar: React.FC<NavbarProps> = () => {
     closeDropdowns();
   };
 
-  const handleStartCampaign = (): void => {
-    router.push('/auth?mode=login');
-    closeDropdowns();
-    setIsOpen(false);
-  };
-
-  const handleHowToGive = (): void => {
-    router.push('/how-it-works');
-    closeDropdowns();
-    setIsOpen(false);
-  };
-
   return (
     <div
-      className=" lg:px-20 px-6 md:px-10 py-7 "
+      className={`lg:px-20 px-6 md:px-10 py-7 ${
+        isScrolled ? 'bg-white/95 backdrop-blur-sm shadow-sm' : ''
+      }`}
     >
       <div className="flex justify-between items-center">
         {/* Logo - Center */}
@@ -127,12 +118,12 @@ const Navbar: React.FC<NavbarProps> = () => {
                 Login
               </button>
               <div>
-                <button
+                <Button
                   onClick={handleSignup}
                   className="bg-primary py-[7px] px-6 text-white bg-green-600 cursor-pointer shadow-md rounded-sm transition-transform hover:-translate-y-1"
                 >
                   Sign up
-                </button>
+                </Button>
               </div>
             </>
           ) : (
@@ -242,24 +233,25 @@ const Navbar: React.FC<NavbarProps> = () => {
               </Link>
             </ul>
 
-          
             {/* Mobile Auth Section */}
             {!isLoggedIn ? (
-              <div
-                className="flex flex-col items-center gap-6 mt-9 py-6 text-primary font-semibold text-[16px]"
-                onClick={closeMenu}
-              >
+              <div className="flex flex-col items-center gap-6 mt-9 py-6 text-primary font-semibold text-[16px]">
                 <button 
-                  onClick={handleLogin}
-                  className=""
+                  onClick={() => {
+                    handleLogin();
+                    closeMenu();
+                  }}
                 >
                   Login
                 </button>
                 <div>
                   <button
                     type="button"
-                    onClick={handleSignup}
-                      className="bg-primary py-[7px] px-6 text-white bg-green-600 cursor-pointer shadow-md rounded-sm transition-transform hover:-translate-y-1"
+                    onClick={() => {
+                      handleSignup();
+                      closeMenu();
+                    }}
+                    className="bg-primary py-[7px] px-6 text-white bg-green-600 cursor-pointer shadow-md rounded-sm transition-transform hover:-translate-y-1"
                   >
                     Sign up
                   </button>

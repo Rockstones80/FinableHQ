@@ -8,7 +8,6 @@ import { mockPosts, mockSearch, mockUrlFor } from '../../lib/mockData'
 import type { Post } from '../../types/sanity'
 import Link from 'next/link'
 import Image from 'next/image'
-import Navigation from "@/components/layout/Navigation"
 import Footer from "@/components/layout/Footer"
 
 // Type for handling both Sanity and mock image formats
@@ -168,10 +167,8 @@ export default function BlogPage() {
           <div className="absolute bottom-32 left-16 w-24 h-24 bg-emerald-50 rounded-full opacity-60"></div>
           <div className="absolute top-1/2 left-1/3 w-16 h-16 border-2 border-emerald-100 rotate-45 opacity-50"></div>
         </div>
-
-        <Navigation />
         
-        <div className="flex items-center justify-center min-h-[80vh]">
+        <div className="flex items-center justify-center min-h-screen">
           <motion.div 
             className="text-center"
             initial={{ opacity: 0, y: 30 }}
@@ -181,7 +178,7 @@ export default function BlogPage() {
             {/* Professional loading animation */}
             <div className="relative mb-8">
               <div className="w-16 h-16 mx-auto">
-                <div className="absolute inset-0 rounded-full border-2 border-gray-200"></div>
+                <div className="absolute inset-0 rounded-full border-2 border-gray-200"> <span className="text-green-600 font-bold text-4xl justify-center item-center ">Finable</span></div>
                 <div className="absolute inset-0 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></div>
               </div>
             </div>
@@ -218,8 +215,6 @@ export default function BlogPage() {
         <div className="absolute top-1/4 left-1/2 w-20 h-20 bg-gray-50 rounded-full"></div>
       </div>
 
-      <Navigation />
-
       <main className="relative z-10 px-6 lg:px-12 py-16">
         {/* Hero Section */}
         <motion.div 
@@ -235,7 +230,7 @@ export default function BlogPage() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             Educational
-            <span className="block text-emerald-600">Insights</span>
+            <span className="block text-green-600">Insights</span>
           </motion.h1>
           
           <motion.p 
@@ -350,7 +345,7 @@ export default function BlogPage() {
               <h2 className="text-3xl font-black text-gray-900 mb-4">
                 Featured Stories
               </h2>
-              <div className="w-16 h-1 bg-emerald-600 mx-auto rounded-full"></div>
+              <div className="w-16 h-1 bg-green-600 mx-auto rounded-full"></div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -424,7 +419,7 @@ export default function BlogPage() {
                 <p className="text-gray-600 mb-6">Try different keywords or explore our topics</p>
                 <button
                   onClick={handleClearSearch}
-                  className="px-6 py-3 bg-emerald-600 text-white rounded-full font-medium hover:bg-emerald-700 transition-colors duration-300"
+                  className="px-6 py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-colors duration-300"
                 >
                   View All Articles
                 </button>
@@ -467,7 +462,7 @@ function FeaturedPostCard({ post, getImageUrl, getAuthorImageUrl }: FeaturedPost
             )}
             
             <div className="absolute top-4 left-4">
-              <div className="flex items-center gap-2 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+              <div className="flex items-center gap-2 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                 <div className="w-2 h-2 bg-white rounded-full"></div>
                 FEATURED
               </div>
@@ -478,7 +473,7 @@ function FeaturedPostCard({ post, getImageUrl, getAuthorImageUrl }: FeaturedPost
           <div className="p-6">
             <div className="flex items-center gap-3 mb-4">
               {post.readingTime && (
-                <span className="text-sm text-emerald-600 font-medium">
+                <span className="text-sm text-green-600 font-medium">
                   {post.readingTime} min read
                 </span>
               )}
@@ -489,7 +484,7 @@ function FeaturedPostCard({ post, getImageUrl, getAuthorImageUrl }: FeaturedPost
               )}
             </div>
             
-            <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300 line-clamp-2">
+            <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 line-clamp-2">
               {post.title}
             </h2>
             
@@ -517,7 +512,7 @@ function FeaturedPostCard({ post, getImageUrl, getAuthorImageUrl }: FeaturedPost
               </div>
               
               <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-emerald-100 transition-colors duration-300">
-                <svg className="w-4 h-4 text-gray-600 group-hover:text-emerald-600 transform group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-gray-600 group-hover:text-green-600 transform group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </div>
@@ -562,7 +557,7 @@ function RegularPostCard({ post, getImageUrl, getAuthorImageUrl }: RegularPostCa
           )}
 
           <div className="p-5">
-            <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300 line-clamp-2">
+            <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 line-clamp-2">
               {post.title}
             </h3>
             
@@ -585,7 +580,7 @@ function RegularPostCard({ post, getImageUrl, getAuthorImageUrl }: RegularPostCa
               </div>
               
               {post.readingTime && (
-                <span className="text-emerald-600 text-xs font-medium">
+                <span className="text-green-600 text-xs font-medium">
                   {post.readingTime}m
                 </span>
               )}

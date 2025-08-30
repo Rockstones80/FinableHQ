@@ -156,6 +156,9 @@ export default function BlogPage() {
     }
   }
 
+  const featuredPosts = posts.filter(post => post.featured).slice(0, 3)
+  const regularPosts = searchTerm || activeTag ? filteredPosts : posts.filter(post => !post.featured)
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white">
@@ -166,11 +169,9 @@ export default function BlogPage() {
           <div className="absolute top-1/2 left-1/3 w-16 h-16 border-2 border-emerald-100 rotate-45 opacity-50"></div>
         </div>
 
-        <div className="relative z-10">
-          <Navigation />
-        </div>
+        <Navigation />
         
-        <div className="relative z-10 flex items-center justify-center min-h-[80vh]">
+        <div className="flex items-center justify-center min-h-[80vh]">
           <motion.div 
             className="text-center"
             initial={{ opacity: 0, y: 30 }}
@@ -207,9 +208,6 @@ export default function BlogPage() {
     )
   }
 
-  const featuredPosts = posts.filter(post => post.featured).slice(0, 3)
-  const regularPosts = searchTerm || activeTag ? filteredPosts : posts.filter(post => !post.featured)
-
   return (
     <div className="min-h-screen bg-white">
       {/* Subtle background pattern */}
@@ -220,9 +218,7 @@ export default function BlogPage() {
         <div className="absolute top-1/4 left-1/2 w-20 h-20 bg-gray-50 rounded-full"></div>
       </div>
 
-      <div className="relative z-10">
-        <Navigation />
-      </div>
+      <Navigation />
 
       <main className="relative z-10 px-6 lg:px-12 py-16">
         {/* Hero Section */}

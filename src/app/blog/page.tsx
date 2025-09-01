@@ -9,7 +9,7 @@ import { mockPosts, mockSearch, mockUrlFor } from '../../lib/mockData'
 import type { Post } from '../../types/sanity'
 import Link from 'next/link'
 import Image from 'next/image'
-import Footer from "@/components/layout/Footer"
+// import Footer from "@/components/layout/Footer"
 
 // Type for handling both Sanity and mock image formats
 type ImageType = {
@@ -466,8 +466,6 @@ export default function BlogPage() {
           )}
         </motion.section>
       </main>
-
-      <Footer />
     </div>
   )
 }

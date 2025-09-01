@@ -8,7 +8,7 @@ import { PortableText, PortableTextComponents } from '@portabletext/react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import Footer from "@/components/layout/Footer"
+// import Footer from "@/components/layout/Footer"
 import { Metadata } from 'next'
 import ClientMotionWrapper from './ClientMotionWrapper'
 
@@ -384,7 +384,7 @@ export default async function BlogPostPage({ params }: {
         </article>
       </ClientMotionWrapper>
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )}
 

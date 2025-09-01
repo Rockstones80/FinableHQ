@@ -140,7 +140,7 @@ const HeroStorySection: React.FC = () => {
         <div className="max-w-5xl mx-auto text-center">
           <div className="slide-in-up">
             <h1 className="text-6xl font-extrabold text-black mb-2">
-              About <span className="text-green-600">FINABLE</span>
+              Our <span className="text-green-600">Story</span>
             </h1>
             <p className="font-medium text-gray-600 max-w-[735px] mx-auto">
               Bridging the gap between dreams and reality. We&apos;re a crowdfunding platform built to empower 

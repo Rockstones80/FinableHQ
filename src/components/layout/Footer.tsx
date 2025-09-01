@@ -1,4 +1,3 @@
-import { GraduationCap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "../ui/Button";
@@ -12,7 +11,7 @@ const sections = [
     items: [
       { name: "How to start a campaign", link: "/how-it-works" },
       { name: "Fundraising categories", link: "/browse" },
-      { name: "Success Stories", link: "/about" },
+      { name: "Blog", link: "/blog" },
     ],
   },
   {

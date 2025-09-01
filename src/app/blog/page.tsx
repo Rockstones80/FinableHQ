@@ -656,4 +656,4 @@ function RegularPostCard({ post, getImageUrl, getAuthorImageUrl }: RegularPostCa
       </article>
     </Link>
   )
-}
+} 

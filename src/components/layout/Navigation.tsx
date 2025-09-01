@@ -14,24 +14,8 @@ type NavbarProps = object
 const Navbar: React.FC<NavbarProps> = () => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<DropdownType>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Toggle this to test logged in state
-
-  // useEffect(() => {
-  //   // const handleScroll = (): void => {
-  //   //   if (window.scrollY > 5) {
-  //   //     setIsScrolled(true);
-  //   //   } else {
-  //   //     setIsScrolled(false);
-  //   //   }
-  //   // };
-
-  // //   window.addEventListener("scroll", handleScroll);
-
-  // //   // Cleanup
-  // //   return () => window.removeEventListener("scroll", handleScroll);
-  // // }, []);
 
   const toggleNavbar = (): void => {
     setIsOpen(!isOpen);
@@ -65,22 +49,8 @@ const Navbar: React.FC<NavbarProps> = () => {
     closeDropdowns();
   };
 
-  // const handleStartCampaign = (): void => {
-  //   router.push('/auth?mode=login');
-  //   closeDropdowns();
-  //   setIsOpen(false);
-  // };
-
-  // const handleHowToGive = (): void => {
-  //   router.push('/how-it-works');
-  //   closeDropdowns();
-  //   setIsOpen(false);
-  // };
-
   return (
-    <div
-      className=" lg:px-20 px-6 md:px-10 py-5"
-    >
+    <div className="w-full lg:px-20 px-6 md:px-10 py-5 bg-white">
       <div className="flex justify-between items-center">
         {/* Logo - Center */}
         <Link className="font-extrabold text-3xl text-green-600" href="/">
@@ -149,7 +119,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               </button>
               
               {activeDropdown === 'userMenu' && (
-                <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
+                <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-[60]">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-sm font-medium text-gray-900">John Doe</p>
                     <p className="text-xs text-gray-500">john@example.com</p>
@@ -209,7 +179,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="lg:hidden block bg-white absolute top-16 left-0 w-full h-screen pt-10 text-gray-600">
+          <div className="lg:hidden block bg-white absolute top-full left-0 w-full h-screen pt-10 text-gray-600 z-[55] border-t border-gray-100">
             {/* Mobile Navigation Links */}
             <ul className="flex flex-col items-center gap-6 py-3 pb-10">
               <Link
@@ -312,7 +282,7 @@ const Navbar: React.FC<NavbarProps> = () => {
         {/* Click outside to close dropdowns */}
         {activeDropdown && (
           <div 
-            className="fixed inset-0 z-40" 
+            className="fixed inset-0 z-[55]" 
             onClick={closeDropdowns}
           />
         )}

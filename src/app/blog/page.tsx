@@ -253,7 +253,7 @@ export default function BlogPage() {
         <div className="absolute top-1/4 left-1/2 w-20 h-20 bg-gray-50 rounded-full"></div>
       </div>
 
-      <main className="relative z-10 px-6 lg:px-12 py-16">
+      <main className="relative z-10 px-6 lg:px-12 pt-24 pb-16">
         {/* Hero Section */}
         <motion.div 
           className="text-center mb-16 max-w-4xl mx-auto"
@@ -267,8 +267,8 @@ export default function BlogPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <span className="block text-green-600">Insightful</span>
-            stories
+            Educational
+            <span className="block text-green-600">Insights</span>
           </motion.h1>
           
           <motion.p 

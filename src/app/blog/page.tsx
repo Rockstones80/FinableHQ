@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from "framer-motion"
-import { client, blogQueries, urlFor } from '../../lib/sanity'
+import { client, urlFor } from '../../lib/sanity'
+import { blogQueries } from '../../lib/sanity/queries'
 import { USE_MOCK_DATA } from '../../lib/blogConfig'
 import { mockPosts, mockSearch, mockUrlFor } from '../../lib/mockData'
 import type { Post } from '../../types/sanity'

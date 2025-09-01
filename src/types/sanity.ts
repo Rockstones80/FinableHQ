@@ -82,6 +82,6 @@ export interface SanityImage {
     tags?: string[]
     readingTime?: number
     featured?: boolean
-    sections?: PostSection[]
+    body?: PortableTextBlock[]  // Add this line
     sectionsCount?: number
   }

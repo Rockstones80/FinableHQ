@@ -12,6 +12,7 @@ const postFields = `
   readingTime,
   sectionsCount,
   featured,
+  body[],
   author->{
     name,
     image
@@ -24,11 +25,14 @@ export const blogQueries = {
     ${postFields}
   }`,
 
-  // Get a single post by slug
+  // Get a single post by slug - FIXED: Use consistent field selection
   getPostBySlug: `*[_type == "post" && slug.current == $slug][0] {
-    ${postFields},
-    body,
-    "headings": body[length(style) == 2 && string::startsWith(style, "h")]
+    ...,
+    body[],  // Add the [] here
+    author->{
+      name,
+      image
+    }
   }`,
 
   // Search posts by term

@@ -1,20 +1,16 @@
-import { client, blogQueries, urlFor } from '../../../lib/sanity'
+import React from 'react'
+import { client, urlFor } from '../../../lib/sanity'
+import { blogQueries } from '../../../lib/sanity/queries'
 import { USE_MOCK_DATA } from '../../../lib/blogConfig'
 import { mockPosts, mockUrlFor } from '../../../lib/mockData'
 import type { Post } from '../../../types/sanity'
-import { PortableText } from '@portabletext/react'
+import { PortableText, PortableTextComponents } from '@portabletext/react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import Navigation from "@/components/layout/Navigation"
 import Footer from "@/components/layout/Footer"
+import { Metadata } from 'next'
 import ClientMotionWrapper from './ClientMotionWrapper'
-
-interface BlogPostPageProps {
-  params: {
-    slug: string
-  }
-}
 
 // Type for image blocks in portable text
 interface ImageBlock {
@@ -37,21 +33,26 @@ type ImageType = {
   };
 } | string | null | undefined
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  let post: Post | null = null
+export default async function BlogPostPage({ params }: { 
+    params: Promise<{ slug: string }> 
+  }) {
+    const { slug } = await params;
+  
+    let post: Post | null = null;
 
-  if (USE_MOCK_DATA) {
-    const foundPost = mockPosts.find(p => p.slug?.current === params.slug)
-    post = foundPost as unknown as Post || null
-  } else {
-    post = await client.fetch(blogQueries.getPostBySlug, {
-      slug: params.slug
-    })
-  }
+    if (USE_MOCK_DATA) {
+        const foundPost = mockPosts.find(p => p.slug?.current === slug);
+        post = foundPost as unknown as Post || null;
+    } else {      
+        post = await client.fetch(blogQueries.getPostBySlug, {
+          slug: slug
+        });
+    
+    }
 
-  if (!post) {
-    notFound()
-  }
+    if (!post) {
+        notFound();
+    }
 
   const getImageUrl = (image: ImageType, width = 800, height = 450): string => {
     if (!image) return '/placeholder-image.jpg'
@@ -68,7 +69,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     }
   }
 
-  const components = {
+  // Use the correct PortableText component types
+  const components: PortableTextComponents = {
     types: {
       image: ({ value }: { value: ImageBlock }) => (
         <div className="my-12 group">
@@ -87,9 +89,52 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
         </div>
       )
-    }
+    },
+    block: {
+      h1: ({ children }) => <h1 className="text-3xl font-bold mt-12 mb-6 text-gray-900">{children}</h1>,
+      h2: ({ children }) => <h2 className="text-2xl font-bold mt-10 mb-4 text-gray-900">{children}</h2>,
+      h3: ({ children }) => <h3 className="text-xl font-bold mt-8 mb-4 text-emerald-600">{children}</h3>,
+      h4: ({ children }) => <h4 className="text-lg font-semibold mt-6 mb-3 text-emerald-600">{children}</h4>,
+      blockquote: ({ children }) => (
+        <blockquote className="border-l-4 border-emerald-600 pl-6 italic text-gray-600 my-8 bg-emerald-50 py-4 rounded-r-xl">
+          {children}
+        </blockquote>
+      ),
+      normal: ({ children }) => <p className="mb-6 leading-relaxed text-gray-700">{children}</p>,
+    },
+    marks: {
+      link: ({ children, value }) => (
+        <a 
+          href={value?.href || '#'} 
+          className="text-emerald-600 hover:text-emerald-700 underline transition-colors duration-200"
+          target={value?.href?.startsWith('http') ? '_blank' : undefined}
+          rel={value?.href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          {children}
+        </a>
+      ),
+      strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
+      em: ({ children }) => <em className="italic">{children}</em>,
+      code: ({ children }) => (
+        <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-800">
+          {children}
+        </code>
+      ),
+    },
+    list: {
+      bullet: ({ children }) => <ul className="space-y-2 my-6 ml-4">{children}</ul>,
+      number: ({ children }) => <ol className="space-y-2 my-6 list-decimal list-inside ml-4">{children}</ol>,
+    },
+    listItem: {
+      bullet: ({ children }) => (
+        <li className="relative pl-6 before:content-['•'] before:absolute before:left-0 before:text-emerald-600 before:font-bold">
+          {children}
+        </li>
+      ),
+      number: ({ children }) => <li>{children}</li>,
+    },
   }
-
+  
   return (
     <div className="min-h-screen bg-white">
       {/* Subtle background elements */}
@@ -98,11 +143,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="absolute bottom-48 left-24 w-24 h-24 bg-emerald-50 rounded-full"></div>
         <div className="absolute top-2/3 right-1/4 w-16 h-16 border-2 border-emerald-100 rotate-45"></div>
       </div>
-
-      <div className="relative z-10">
-        <Navigation />
-      </div>
-
+      
       <ClientMotionWrapper>
         <article className="relative z-10 flex-1">
           {/* Hero Section */}
@@ -254,32 +295,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           {/* Content */}
           <div className="max-w-4xl mx-auto px-8 py-16">
-            {/* Post Sections */}
-            {post.sections && post.sections.length > 0 ? (
-              <div className="space-y-12">
-                {post.sections.map((section, index) => (
-                  <section 
-                    key={index} 
-                    className="group"
-                  >
-                    <div className="relative bg-gray-50 border border-gray-200 rounded-2xl p-8 lg:p-12 hover:bg-gray-100/50 hover:border-gray-300 transition-all duration-300">
-                      {/* Section decoration */}
-                      <div className="absolute top-0 left-8 w-12 h-1 bg-emerald-600 rounded-full transform -translate-y-1/2"></div>
-                      
-                      {section.title && (
-                        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8 group-hover:text-emerald-600 transition-colors duration-300">
-                          {section.title}
-                        </h2>
-                      )}
-                      
-                      <div className="prose prose-lg max-w-none">
-                        <div className="text-gray-700 leading-relaxed text-lg [&>p]:mb-6 [&>p]:leading-relaxed [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-gray-900 [&>h3]:mt-10 [&>h3]:mb-4 [&>h4]:text-lg [&>h4]:font-semibold [&>h4]:text-emerald-600 [&>h4]:mt-8 [&>h4]:mb-4 [&>ul]:space-y-2 [&>ul>li]:relative [&>ul>li]:pl-6 [&>ul>li]:before:content-['•'] [&>ul>li]:before:absolute [&>ul>li]:before:left-0 [&>ul>li]:before:text-emerald-600 [&>ul>li]:before:font-bold [&>blockquote]:border-l-4 [&>blockquote]:border-emerald-600 [&>blockquote]:pl-6 [&>blockquote]:italic [&>blockquote]:text-gray-600 [&>blockquote]:my-6 [&>blockquote]:bg-emerald-50 [&>blockquote]:py-4 [&>blockquote]:rounded-r-xl">
-                          <PortableText value={section.content} components={components} />
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-                ))}
+
+           {/* Main Blog Content */}
+           {post.body && Array.isArray(post.body) && post.body.length > 0 ? (
+              <div className="prose prose-lg prose-gray max-w-none">
+                <PortableText value={post.body} components={components} />
               </div>
             ) : (
               <div className="text-center py-16">
@@ -289,8 +309,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Content Coming Soon</h3>
-                  <p className="text-gray-600">This article is still being written.</p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">No Content Available</h3>
+                  <p className="text-gray-600">This article doesn&apos;t have any content yet.</p>
+                  
+                  {/* Additional debug info */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <div className="mt-4 text-xs text-gray-500">
+                      <p>Body value: {JSON.stringify(post.body)}</p>
+                      <p>Body type: {typeof post.body}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -304,7 +332,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 </div>
                 
                 <div className="flex flex-wrap justify-center gap-3">
-                  {post.tags.map(tag => (
+                  {post.tags.map((tag: string) => (
                     <Link 
                       key={tag}
                       href={`/blog?tag=${encodeURIComponent(tag)}`}
@@ -358,8 +386,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
       <Footer />
     </div>
-  )
-}
+  )}
+
 
 // Generate static params - handle both mock and Sanity data
 export async function generateStaticParams() {
@@ -378,17 +406,24 @@ export async function generateStaticParams() {
 }
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: BlogPostPageProps) {
-  let post: Post | null = null
+export async function generateMetadata({ 
+    params 
+  }: { 
+    params: Promise<{ slug: string }> 
+  }): Promise<Metadata> {
+    // Await params first
+    const { slug } = await params;
+    
+    let post: Post | null = null
 
-  if (USE_MOCK_DATA) {
-    const foundPost = mockPosts.find(p => p.slug?.current === params.slug)
-    post = foundPost as unknown as Post || null
-  } else {
-    post = await client.fetch(blogQueries.getPostBySlug, {
-      slug: params.slug
-    })
-  }
+    if (USE_MOCK_DATA) {
+        const foundPost = mockPosts.find(p => p.slug?.current === slug)
+        post = foundPost as unknown as Post || null
+      } else {
+        post = await client.fetch(blogQueries.getPostBySlug, {
+          slug: slug
+        })
+      }
 
   if (!post) {
     return {

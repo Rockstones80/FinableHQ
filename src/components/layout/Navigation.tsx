@@ -129,7 +129,7 @@ const Navbar: React.FC<NavbarProps> = () => {
               <div>
                 <button
                   onClick={handleSignup}
-                  className="bg-primary py-[7px] px-6 text-white bg-green-600 cursor-pointer shadow-md rounded-sm transition-transform hover:-translate-y-1"
+                  className="bg-primary py-[7px] px-6 text-white bg-green-600 cursor-pointer shadow-md rounded-3xl transition-transform hover:-translate-y-1"
                 >
                   Sign up
                 </button>

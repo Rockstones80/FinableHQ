@@ -27,7 +27,7 @@ const CTASection: React.FC<CTASectionProps> = () => {
             Join thousands of Nigerians who have successfully funded their projects through Finable
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button className="ring-1 ring-white py-[9px] px-6 cursor-pointer shadow-md font-semibold rounded-sm transition-transform hover:-translate-y-1 text-white">
+            <button className="ring-1 ring-white py-[9px] bg-green-600 opacity-90 px-6 cursor-pointer shadow-md font-semibold rounded-sm transition-transform hover:-translate-y-1 text-white">
               Start Your Campaign
             </button>
           </div>

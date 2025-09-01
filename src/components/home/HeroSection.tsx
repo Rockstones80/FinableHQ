@@ -12,16 +12,16 @@ const Hero: React.FC = () => {
       <div className="justify-center items-center flex flex-col">
         <TypeIt
           options={{
-            speed: 120,
+            speed: 80,
             waitUntilVisible: true,
             lifeLike: true,
             cursor: true,
-            cursorChar: "|",
+            cursorChar: ".",
           }}
           className="text-5xl font-extrabold text-center mt-16 mb-8 max-w-[600px] [&_.ti-cursor]:text-green-600"
         >
           Empower Your Education <br /> with{" "}
-          <span className="text-green-600">Finable today.</span>
+          <span className="text-green-600">Finable</span>  today
         </TypeIt>
         <p className="text-center mb-6 font-medium text-gray-600">
           Welcome to Finable, where your educational dreams become a reality.

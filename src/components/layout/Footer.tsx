@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Button from "../ui/Button";
+// import Button from "../ui/Button";
 import instagram from "../../../public/images/Footer/instagram.svg";
 import x from "../../../public/images/Footer/x.svg";
 import youtube from "../../../public/images/Footer/youtube.svg";

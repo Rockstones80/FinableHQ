@@ -21,6 +21,29 @@ type ImageType = {
   };
 } | string | null | undefined
 
+// Data normalization function for consistency
+const normalizePost = (post: Post): Post => {
+  return {
+    ...post,
+    title: post.title || 'Untitled',
+    excerpt: post.excerpt || '',
+    publishedAt: post.publishedAt || new Date().toISOString(),
+    readingTime: post.readingTime || 5,
+    tags: post.tags || [],
+    featured: post.featured || false,
+    author: {
+      _id: post.author?._id || 'unknown-author',
+      name: post.author?.name || 'Anonymous',
+      image: post.author?.image || undefined,
+      slug: post.author?.slug || { current: 'unknown' },
+      bio: post.author?.bio || undefined,
+      ...post.author
+    },
+    slug: post.slug || { current: '' },
+    mainImage: post.mainImage || undefined
+  }
+}
+
 export default function BlogPage() {
   const [posts, setPosts] = useState<Post[]>([])
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -33,13 +56,14 @@ export default function BlogPage() {
       try {
         if (USE_MOCK_DATA) {
           await new Promise(resolve => setTimeout(resolve, 1200))
-          const convertedPosts = mockPosts as unknown as Post[]
+          const convertedPosts = mockPosts.map(normalizePost) as Post[]
           setPosts(convertedPosts)
           setFilteredPosts(convertedPosts)
         } else {
           const fetchedPosts: Post[] = await client.fetch(blogQueries.getAllPosts)
-          setPosts(fetchedPosts)
-          setFilteredPosts(fetchedPosts)
+          const normalizedPosts = fetchedPosts.map(normalizePost)
+          setPosts(normalizedPosts)
+          setFilteredPosts(normalizedPosts)
         }
         setLoading(false)
       } catch (error) {
@@ -59,13 +83,13 @@ export default function BlogPage() {
     if (term.length > 0) {
       try {
         if (USE_MOCK_DATA) {
-          const searchResults = mockSearch(mockPosts, term) as unknown as Post[]
+          const searchResults = mockSearch(mockPosts, term).map(normalizePost) as Post[]
           setFilteredPosts(searchResults)
         } else {
           const searchResults: Post[] = await client.fetch(blogQueries.searchPosts, {
             searchTerm: term
           })
-          setFilteredPosts(searchResults)
+          setFilteredPosts(searchResults.map(normalizePost))
         }
       } catch (error) {
         console.error('Search error:', error)
@@ -86,13 +110,13 @@ export default function BlogPage() {
     setSearchTerm('')
     try {
       if (USE_MOCK_DATA) {
-        const searchResults = mockSearch(mockPosts, tag) as unknown as Post[]
+        const searchResults = mockSearch(mockPosts, tag).map(normalizePost) as Post[]
         setFilteredPosts(searchResults)
       } else {
         const searchResults: Post[] = await client.fetch(blogQueries.searchPosts, {
           searchTerm: tag
         })
-        setFilteredPosts(searchResults)
+        setFilteredPosts(searchResults.map(normalizePost))
       }
     } catch (error) {
       console.error('Tag search error:', error)
@@ -133,7 +157,13 @@ export default function BlogPage() {
       if (USE_MOCK_DATA) {
         return mockUrlFor(image as Parameters<typeof mockUrlFor>[0]).url()
       } else {
-        return urlFor(image as Parameters<typeof urlFor>[0]).width(400).height(250).url()
+        return urlFor(image as Parameters<typeof urlFor>[0])
+          .width(500)
+          .height(280)
+          .fit('crop')
+          .auto('format')
+          .quality(85)
+          .url()
       }
     } catch (error) {
       console.warn('Error generating image URL:', error)
@@ -148,7 +178,13 @@ export default function BlogPage() {
       if (USE_MOCK_DATA) {
         return mockUrlFor(image as Parameters<typeof mockUrlFor>[0]).url()
       } else {
-        return urlFor(image as Parameters<typeof urlFor>[0]).width(32).height(32).url()
+        return urlFor(image as Parameters<typeof urlFor>[0])
+          .width(64)
+          .height(64)
+          .fit('crop')
+          .auto('format')
+          .quality(90)
+          .url()
       }
     } catch (error) {
       console.warn('Error generating author image URL:', error)
@@ -176,10 +212,11 @@ export default function BlogPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Professional loading animation */}
             <div className="relative mb-8">
               <div className="w-16 h-16 mx-auto">
-                <div className="absolute inset-0 rounded-full border-2 border-gray-200"> <span className="text-green-600 font-bold text-4xl justify-center item-center ">Finable</span></div>
+                <div className="absolute inset-0 rounded-full border-2 border-gray-200"> 
+                  <span className="text-green-600 font-bold text-4xl justify-center item-center ">Finable</span>
+                </div>
                 <div className="absolute inset-0 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin"></div>
               </div>
             </div>
@@ -230,8 +267,8 @@ export default function BlogPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Educational
-            <span className="block text-green-600">Insights</span>
+            <span className="block text-green-600">Insightful</span>
+            stories
           </motion.h1>
           
           <motion.p 
@@ -334,7 +371,7 @@ export default function BlogPage() {
           )}
         </AnimatePresence>
 
-        {/* Featured Posts */}
+        {/* Featured Posts - Larger and uniform */}
         {!searchTerm && !activeTag && featuredPosts.length > 0 && (
           <motion.section 
             className="mb-20"
@@ -349,14 +386,14 @@ export default function BlogPage() {
               <div className="w-16 h-1 bg-green-600 mx-auto rounded-full"></div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-10 max-w-7xl mx-auto">
               {featuredPosts.map((post, index) => (
                 <motion.div
                   key={post._id}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -8 }}
                 >
                   <FeaturedPostCard 
                     post={post} 
@@ -369,7 +406,7 @@ export default function BlogPage() {
           </motion.section>
         )}
 
-        {/* All Posts */}
+        {/* All Posts - Larger and uniform */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -382,7 +419,7 @@ export default function BlogPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             <AnimatePresence>
               {regularPosts.map((post, index) => (
                 <motion.div
@@ -391,7 +428,7 @@ export default function BlogPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -8 }}
                 >
                   <RegularPostCard 
                     post={post} 
@@ -435,7 +472,7 @@ export default function BlogPage() {
   )
 }
 
-// Featured Post Card Component
+// Enhanced Featured Post Card Component - LARGER & UNIFORM
 interface FeaturedPostCardProps {
   post: Post
   getImageUrl: (image: ImageType) => string
@@ -443,77 +480,90 @@ interface FeaturedPostCardProps {
 }
 
 function FeaturedPostCard({ post, getImageUrl, getAuthorImageUrl }: FeaturedPostCardProps) {
+  const normalizedPost = normalizePost(post)
+  
   return (
-    <Link href={`/blog/${post.slug.current}`}>
+    <Link href={`/blog/${normalizedPost.slug.current}`}>
       <article className="group cursor-pointer h-full">
-        <div className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
+        <div className="bg-white border-2 border-gray-200 rounded-3xl overflow-hidden hover:border-emerald-300 hover:shadow-2xl transition-all duration-300 h-[520px] flex flex-col">
           {/* Featured badge */}
-          <div className="relative">
-            {post.mainImage && (
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src={getImageUrl(post.mainImage)}
-                  alt={post.title}
-                  width={400}
-                  height={250}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
-              </div>
-            )}
+          <div className="relative flex-shrink-0">
+            <div className="relative h-56 overflow-hidden">
+              <Image
+                src={getImageUrl(normalizedPost.mainImage)}
+                alt={normalizedPost.title}
+                width={500}
+                height={280}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                priority={true}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+            </div>
             
             <div className="absolute top-4 left-4">
-              <div className="flex items-center gap-2 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
+              <div className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                 FEATURED
               </div>
             </div>
           </div>
 
-          {/* Content */}
-          <div className="p-6">
+          {/* Content - flex-grow to fill remaining space */}
+          <div className="p-7 flex flex-col flex-grow">
             <div className="flex items-center gap-3 mb-4">
-              {post.readingTime && (
-                <span className="text-sm text-green-600 font-medium">
-                  {post.readingTime} min read
+              {normalizedPost.readingTime && (
+                <span className="text-sm text-green-600 font-semibold bg-green-50 px-3 py-1.5 rounded-full">
+                  {normalizedPost.readingTime} min read
                 </span>
               )}
-              {post.tags && post.tags[0] && (
-                <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
-                  {post.tags[0]}
+              {normalizedPost.tags && normalizedPost.tags[0] && (
+                <span className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm rounded-full font-medium hover:bg-gray-200 transition-colors">
+                  {normalizedPost.tags[0]}
                 </span>
               )}
             </div>
             
-            <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 line-clamp-2">
-              {post.title}
+            <h2 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-green-600 transition-colors duration-300 line-clamp-2 leading-tight">
+              {normalizedPost.title}
             </h2>
             
-            {post.excerpt && (
-              <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed">{post.excerpt}</p>
+            {normalizedPost.excerpt && (
+              <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed text-base flex-grow">
+                {normalizedPost.excerpt}
+              </p>
             )}
             
-            <div className="flex items-center justify-between">
+            {/* Author section - aligned to bottom */}
+            <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
               <div className="flex items-center">
-                {post.author?.image && (
+                <div className="w-12 h-12 rounded-full overflow-hidden mr-3 bg-gray-100 flex-shrink-0">
                   <Image
-                    src={getAuthorImageUrl(post.author.image)}
-                    alt={post.author.name}
-                    width={32}
-                    height={32}
-                    className="w-8 h-8 rounded-full mr-3"
+                    src={getAuthorImageUrl(normalizedPost.author?.image)}
+                    alt={normalizedPost.author?.name || 'Author'}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
                   />
-                )}
+                </div>
                 <div>
-                  <span className="text-gray-900 font-medium text-sm">{post.author?.name}</span>
-                  <time className="block text-gray-500 text-xs">
-                    {new Date(post.publishedAt).toLocaleDateString()}
+                  <span className="text-gray-900 font-semibold text-base block">
+                    {normalizedPost.author?.name}
+                  </span>
+                  <time className="text-gray-500 text-sm">
+                    {new Date(normalizedPost.publishedAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
                   </time>
                 </div>
               </div>
               
-              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-emerald-100 transition-colors duration-300">
-                <svg className="w-4 h-4 text-gray-600 group-hover:text-green-600 transform group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center gap-3 group-hover:gap-4 transition-all duration-300">
+                <span className="text-sm font-medium text-gray-600 group-hover:text-green-600 transition-colors duration-300">
+                  Read more
+                </span>
+                <svg className="w-5 h-5 text-gray-600 group-hover:text-green-600 transform group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </div>
@@ -525,7 +575,7 @@ function FeaturedPostCard({ post, getImageUrl, getAuthorImageUrl }: FeaturedPost
   )
 }
 
-// Regular Post Card Component
+// Enhanced Regular Post Card Component - LARGER & UNIFORM
 interface RegularPostCardProps {
   post: Post
   getImageUrl: (image: ImageType) => string
@@ -533,58 +583,73 @@ interface RegularPostCardProps {
 }
 
 function RegularPostCard({ post, getImageUrl, getAuthorImageUrl }: RegularPostCardProps) {
+  const normalizedPost = normalizePost(post)
+  
   return (
-    <Link href={`/blog/${post.slug.current}`}>
+    <Link href={`/blog/${normalizedPost.slug.current}`}>
       <article className="group cursor-pointer">
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-gray-300 hover:shadow-md transition-all duration-300 h-full">
-          {post.mainImage && (
-            <div className="relative h-40 overflow-hidden">
-              <Image
-                src={getImageUrl(post.mainImage)}
-                alt={post.title}
-                width={300}
-                height={200}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              
-              {post.tags && post.tags[0] && (
-                <div className="absolute top-3 left-3">
-                  <span className="px-2 py-1 bg-white/90 text-gray-700 text-xs rounded-full font-medium">
-                    {post.tags[0]}
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
+        <div className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 hover:shadow-xl transition-all duration-300 h-[460px] flex flex-col">
+          <div className="relative h-48 overflow-hidden flex-shrink-0">
+            <Image
+              src={getImageUrl(normalizedPost.mainImage)}
+              alt={normalizedPost.title}
+              width={400}
+              height={240}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+            
+            {normalizedPost.tags && normalizedPost.tags[0] && (
+              <div className="absolute top-4 left-4">
+                <span className="px-3 py-1.5 bg-white/95 backdrop-blur-sm text-gray-700 text-sm rounded-full font-medium shadow-sm">
+                  {normalizedPost.tags[0]}
+                </span>
+              </div>
+            )}
+          </div>
 
-          <div className="p-5">
-            <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors duration-300 line-clamp-2">
-              {post.title}
+          <div className="p-6 flex flex-col flex-grow">
+            <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-green-600 transition-colors duration-300 line-clamp-2 leading-tight">
+              {normalizedPost.title}
             </h3>
             
-            {post.excerpt && (
-              <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">{post.excerpt}</p>
+            {normalizedPost.excerpt && (
+              <p className="text-gray-600 text-base leading-relaxed line-clamp-3 mb-6 flex-grow">
+                {normalizedPost.excerpt}
+              </p>
             )}
             
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
               <div className="flex items-center">
-                {post.author?.image && (
+                <div className="w-10 h-10 rounded-full overflow-hidden mr-3 bg-gray-100">
                   <Image
-                    src={getAuthorImageUrl(post.author.image)}
-                    alt={post.author.name}
-                    width={24}
-                    height={24}
-                    className="w-6 h-6 rounded-full mr-2"
+                    src={getAuthorImageUrl(normalizedPost.author?.image)}
+                    alt={normalizedPost.author?.name || 'Author'}
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-cover"
                   />
-                )}
-                <span className="text-gray-600 text-xs font-medium">{post.author?.name}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-gray-700 text-sm font-medium">
+                    {normalizedPost.author?.name}
+                  </span>
+                  <time className="text-gray-500 text-sm">
+                    {new Date(normalizedPost.publishedAt).toLocaleDateString('en-US', { 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })}
+                  </time>
+                </div>
               </div>
               
-              {post.readingTime && (
-                <span className="text-green-600 text-xs font-medium">
-                  {post.readingTime}m
+              <div className="flex items-center gap-2 group-hover:gap-3 transition-all duration-300">
+                <span className="text-sm font-medium text-gray-600 group-hover:text-green-600 transition-colors duration-300">
+                  Read more
                 </span>
-              )}
+                <svg className="w-4 h-4 text-gray-600 group-hover:text-green-600 transform group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
             </div>
           </div>
         </div>

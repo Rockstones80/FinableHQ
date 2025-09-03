@@ -10,7 +10,7 @@ const sections = [
     items: [
       { name: "How to start a campaign", link: "/how-it-works" },
       { name: "Fundraising categories", link: "/browse" },
-      { name: "Success Stories", link: "/about" },
+      { name: "Blog", link: "/blog" },
     ],
   },
   {

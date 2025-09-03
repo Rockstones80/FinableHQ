@@ -23,7 +23,6 @@ const Navbar: React.FC<NavbarProps> = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<DropdownType>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Toggle this to test logged in state
 
@@ -50,6 +49,7 @@ const Navbar: React.FC<NavbarProps> = () => {
   // //   // Cleanup
   // //   return () => window.removeEventListener("scroll", handleScroll);
   // // }, []);
+
 
   const toggleNavbar = (): void => {
     setIsOpen(!isOpen);
@@ -82,18 +82,6 @@ const Navbar: React.FC<NavbarProps> = () => {
     setIsLoggedIn(false);
     closeDropdowns();
   };
-
-  // const handleStartCampaign = (): void => {
-  //   router.push('/auth?mode=login');
-  //   closeDropdowns();
-  //   setIsOpen(false);
-  // };
-
-  // const handleHowToGive = (): void => {
-  //   router.push('/how-it-works');
-  //   closeDropdowns();
-  //   setIsOpen(false);
-  // };
 
   return (
     <div className="lg:px-20 px-6 md:px-10 py-5 absolute top-0 left-0 w-full z-30">
@@ -165,6 +153,7 @@ const Navbar: React.FC<NavbarProps> = () => {
                 <span className="text-sm font-medium">John Doe</span>
                 <ChevronDown className="w-3 h-3" />
               </button>
+
 
               {activeDropdown === "userMenu" && (
                 <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
@@ -244,7 +233,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="lg:hidden block bg-white absolute top-16 left-0 w-full h-screen pt-10 text-gray-600">
+          <div className="lg:hidden block bg-white absolute top-full left-0 w-full h-screen pt-10 text-gray-600 z-[55] border-t border-gray-100">
             {/* Mobile Navigation Links */}
             <ul className="flex flex-col items-center gap-6 py-3 pb-10">
               <Link

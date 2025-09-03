@@ -158,38 +158,92 @@ const Unlock = () => {
         <div className="floating-animation absolute bottom-60 left-32 w-16 h-16 bg-gradient-to-tr from-green-100 to-green-300 rounded-full opacity-40"></div>
       </div>
 
-      <div className=" px-20 flex justify-center items-center gap-16 mt-10 mb-10">
-        <div className=" flex flex-col justify-center gap-8  w-1/2">
-            <p className="font-extrabold text-5xl">Unlock Opportunities: <br /> Benefits for <span className="text-green-600">Students</span> and <span className="text-green-600"> Donors</span></p>
-            <p className="text-gray-600 font-medium">Finable enables students to achieve their educational aspirations by linking them with generous benefactors. Donors not only impact students&apos; lives positively but also have the opportunity to receive tax advantages for their donations.</p>
-            <div className=" flex gap-6 justify-start items-center font-semibold ">
-                <a href="/auth/login">
-                <Button
+      {/* Desktop View - Original Layout */}
+      <div className="hidden md:flex justify-center items-center lg:gap-16 gap-8 mt-10 mb-10 lg:px-20 px-12">
+        <div className="flex flex-col justify-center gap-8 w-1/2">
+          <p className="font-extrabold lg:text-5xl text-4xl">
+            Unlock Opportunities: <br /> Benefits for{" "}
+            <span className="text-green-600">Students</span> and{" "}
+            <span className="text-green-600">Donors</span>
+          </p>
+          <p className="text-gray-600 font-medium">
+            Finable enables students to achieve their educational aspirations by linking them with generous benefactors. Donors not only impact students&apos; lives positively but also have the opportunity to receive tax advantages for their donations.
+          </p>
+          <div className="flex gap-6 justify-start items-center font-semibold">
+            <a href="/auth/login">
+              <Button
                 title="Learn More"
-                type='button'
-                className=" ring-1 ring-green-600 py-[9px] px-6 cursor-pointer shadow-md rounded-sm  transition-transform hover:-translate-y-1 text-gray-600"
-                />
-                </a>
+                type="button"
+                className="ring-1 ring-green-600 py-[9px] px-6 cursor-pointer shadow-md rounded-sm transition-transform hover:-translate-y-1 text-gray-600"
+              />
+            </a>
             <div className="flex justify-center items-end gap-2 cursor-pointer text-sm">
-                <a href="">
+              <a href="">
+                <Button title="Sign Up" type="button" className="text-gray-600" />
+              </a>
+              <div className="animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-1/2 h-1/2 ml-auto">
+          <Image
+            src={graduating_picture}
+            alt="graduating picture"
+            className="object-cover rounded-2xl w-full h-96 shadow-xl"
+          />
+        </div>
+      </div>
+
+      {/* Mobile and Tablet View - Responsive Layout */}
+      <div className="md:hidden px-6 py-8">
+        {/* Content Container */}
+        <div className="flex flex-col items-center text-center space-y-8">
+          {/* Image Section - Mobile First */}
+          <div className="w-full max-w-md md:max-w-lg order-1 md:order-2">
+            <Image
+              src={graduating_picture}
+              alt="graduating picture"
+              className="object-cover rounded-2xl w-full h-64 md:h-80 shadow-xl glow-effect"
+            />
+          </div>
+
+          {/* Text Content */}
+          <div className="order-2 md:order-1 space-y-6">
+            <h1 className="font-extrabold text-3xl md:text-4xl leading-tight">
+              Unlock Opportunities: <br className="hidden sm:block" /> 
+              Benefits for{" "}
+              <span className="text-green-600">Students</span> and{" "}
+              <span className="text-green-600">Donors</span>
+            </h1>
+            
+            <p className="text-gray-600 font-medium text-sm md:text-base leading-relaxed max-w-2xl text-justify">
+              Finable enables students to achieve their educational aspirations by linking them with generous benefactors. Donors not only impact students&apos; lives positively but also have the opportunity to receive tax advantages for their donations.
+            </p>
+
+            {/* Buttons */}
+            <div className="flex flex-row gap-4 sm:gap-6 justify-center items-center font-semibold mt-8">
+              <a href="/auth/login" className="w-full sm:w-auto">
                 <Button
-                title="Sign Up"
-                type='button'
-                  className=" text-gray-600 "
+                  title="Learn More"
+                  type="button"
+                  className="ring-1 ring-green-600 py-3 px-8 cursor-pointer shadow-md rounded-sm transition-transform hover:-translate-y-1 text-gray-600 w-full sm:w-auto"
                 />
-                </a>
-                <div className=" animate-pulse">
-                
-                </div>
+              </a>
+              
+              <a href="" className="w-full sm:w-auto">
+                <Button 
+                  title="Sign Up" 
+                  type="button" 
+                  className="bg-green-600 text-white py-3 px-8 rounded-sm shadow-md transition-transform hover:-translate-y-1 w-full sm:w-auto" 
+                />
+              </a>
             </div>
-            </div>
+          </div>
         </div>
 
 
-        <div className="w-1/2 h-1/2 ml-auto">
-            <Image src={graduating_picture} alt="graduating picture" className="object-cover rounded-2xl w-full h-96 shadow-xl"/>
-          </div>
-    </div>
+      </div>
     </div>
   );
 };

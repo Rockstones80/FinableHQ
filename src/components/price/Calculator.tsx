@@ -1,10 +1,9 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
 const FeeCalculatorComponent = () => {
   const [amount, setAmount] = useState(100);
-  const [currency, setCurrency] = useState('NGN');
   const [transactionType, setTransactionType] = useState('donation');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isTransactionDropdownOpen, setIsTransactionDropdownOpen] = useState(false);

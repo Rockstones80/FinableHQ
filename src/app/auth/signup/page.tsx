@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   ArrowRight,
   Users,
@@ -16,9 +16,9 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Button from "../../components/ui/Button";
+import Button from "../../../components/ui/Button";
 
-interface FormData {
+interface SignupFormData {
   email: string;
   password: string;
   confirmPassword: string;
@@ -27,12 +27,11 @@ interface FormData {
   userType: string;
 }
 
-const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<SignupFormData>({
     email: "",
     password: "",
     confirmPassword: "",
@@ -43,28 +42,11 @@ const AuthPage = () => {
 
   const router = useRouter();
 
-  // Placeholder authentication functions
-  const login = async () => {
-    // TODO: Implement actual authentication
-    return { success: true };
-  };
-
+  // Placeholder authentication function
   const signup = async () => {
     // TODO: Implement actual authentication
     return { success: true };
   };
-
-  // Check URL parameters on component mount to determine initial state
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const mode = urlParams.get("mode");
-
-    if (mode === "signup") {
-      setIsLogin(false);
-    } else {
-      setIsLogin(true); // Default to login
-    }
-  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -76,26 +58,19 @@ const AuthPage = () => {
   };
 
   const validateForm = () => {
-    if (!formData.email || !formData.password) {
-      setError("Email and password are required");
+    if (!formData.email || !formData.password || !formData.fullName) {
+      setError("Email, password, and full name are required");
       return false;
     }
 
-    if (!isLogin) {
-      if (!formData.fullName) {
-        setError("Full name is required");
-        return false;
-      }
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return false;
+    }
 
-      if (formData.password !== formData.confirmPassword) {
-        setError("Passwords do not match");
-        return false;
-      }
-
-      if (formData.password.length < 6) {
-        setError("Password must be at least 6 characters long");
-        return false;
-      }
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return false;
     }
 
     // Basic email validation
@@ -117,13 +92,7 @@ const AuthPage = () => {
     setError("");
 
     try {
-
-      if (isLogin) {
-       await login();
-      } else {
-        await signup();
-      }
-
+      await signup();
       // Placeholder for authentication logic
       router.push("/dashboard");
     } catch {
@@ -133,37 +102,12 @@ const AuthPage = () => {
     }
   };
 
-  const toggleAuthMode = () => {
-    const newMode = !isLogin;
-    setIsLogin(newMode);
-
-    // Update URL to reflect the change
-    const newUrl = newMode ? "/auth?mode=login" : "/auth?mode=signup";
-    window.history.pushState({}, "", newUrl);
-
-    // Reset form data and error when switching modes
-    setFormData({
-      email: "",
-      password: "",
-      confirmPassword: "",
-      fullName: "",
-      phone: "",
-      userType: "student",
-    });
-    setError("");
-  };
-
   const handleBackToHome = () => {
-    // Navigate back to landing page
     router.push("/");
   };
 
-  const handleDemoLogin = () => {
-    setFormData({
-      ...formData,
-      email: "ayomideogunsona13@gmail.com",
-      password: "admin",
-    });
+  const navigateToLogin = () => {
+    router.push("/auth/login");
   };
 
   return (
@@ -238,12 +182,10 @@ const AuthPage = () => {
         <div className="hidden lg:flex flex-col justify-center w-1/2 px-8">
           <div className="mb-8">
             <h1 className="text-5xl font-extrabold text-black mb-4">
-              Welcome to <span className="text-green-500">FINABLE</span>
+              Join <span className="text-green-500">FINABLE</span>
             </h1>
             <p className="text-xl text-gray-700 mb-8">
-              {isLogin
-                ? "Welcome back! Continue your journey towards educational excellence."
-                : "Join thousands of students and donors making education dreams come true."}
+              Join thousands of students and donors making education dreams come true.
             </p>
           </div>
 
@@ -287,7 +229,7 @@ const AuthPage = () => {
           </div>
         </div>
 
-        {/* Right side - Auth form */}
+        {/* Right side - Signup form */}
         <div className="w-full lg:w-1/2 max-w-md">
           <div className="bg-white rounded-2xl shadow-2xl p-8 glow-effect">
             {/* Mobile Back Button - Inside the form for smaller screens */}
@@ -301,60 +243,13 @@ const AuthPage = () => {
               </button>
             </div>
 
-            {/* Toggle buttons */}
-            <div className="flex bg-gray-100 rounded-lg p-1 mb-8">
-              <button
-                onClick={() => setIsLogin(true)}
-                className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all duration-300 ${
-                  isLogin
-                    ? "bg-green-500 text-white shadow-md"
-                    : "text-gray-600 hover:text-green-600"
-                }`}
-              >
-                Login
-              </button>
-              <button
-                onClick={() => setIsLogin(false)}
-                className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all duration-300 ${
-                  !isLogin
-                    ? "bg-green-500 text-white shadow-md"
-                    : "text-gray-600 hover:text-green-600"
-                }`}
-              >
-                Sign Up
-              </button>
-            </div>
-
             <div className="slide-in">
               <h2 className="text-3xl font-bold text-center mb-2">
-                {isLogin ? "Welcome Back!" : "Create Account"}
+                Create Account
               </h2>
               <p className="text-gray-600 text-center mb-8">
-                {isLogin
-                  ? "Sign in to continue your journey"
-                  : "Join the Finable community today"}
+                Join the Finable community today
               </p>
-
-              {/* Demo Login Button */}
-              {isLogin && (
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-700 mb-2">
-                    <strong>Demo Account:</strong>
-                  </p>
-                  <p className="text-sm text-blue-600 mb-3">
-                    Email: ayomideogunsona13@gmail.com
-                    <br />
-                    Password: admin
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleDemoLogin}
-                    className="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 transition-colors"
-                  >
-                    Fill Demo Credentials
-                  </button>
-                </div>
-              )}
 
               {/* Error Message */}
               {error && (
@@ -364,70 +259,66 @@ const AuthPage = () => {
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                {!isLogin && (
-                  <>
-                    <div className="relative">
-                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        type="text"
-                        name="fullName"
-                        placeholder="Full Name"
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                        required={!isLogin}
-                      />
-                    </div>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    name="fullName"
+                    placeholder="Full Name"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                    required
+                  />
+                </div>
 
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder="Phone Number"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                      />
-                    </div>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone Number"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                  />
+                </div>
 
-                    <div className="relative">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        I am a:
-                      </label>
-                      <div className="flex gap-4">
-                        <label className="flex items-center">
-                          <input
-                            type="radio"
-                            name="userType"
-                            value="student"
-                            checked={formData.userType === "student"}
-                            onChange={handleInputChange}
-                            className="text-green-500 focus:ring-green-500"
-                          />
-                          <span className="ml-2 flex items-center gap-2">
-                            <GraduationCap className="w-4 h-4" />
-                            Student
-                          </span>
-                        </label>
-                        <label className="flex items-center">
-                          <input
-                            type="radio"
-                            name="userType"
-                            value="donor"
-                            checked={formData.userType === "donor"}
-                            onChange={handleInputChange}
-                            className="text-green-500 focus:ring-green-500"
-                          />
-                          <span className="ml-2 flex items-center gap-2">
-                            <Heart className="w-4 h-4" />
-                            Donor
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </>
-                )}
+                <div className="relative">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    I am a:
+                  </label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="userType"
+                        value="student"
+                        checked={formData.userType === "student"}
+                        onChange={handleInputChange}
+                        className="text-green-500 focus:ring-green-500"
+                      />
+                      <span className="ml-2 flex items-center gap-2">
+                        <GraduationCap className="w-4 h-4" />
+                        Student
+                      </span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="userType"
+                        value="donor"
+                        checked={formData.userType === "donor"}
+                        onChange={handleInputChange}
+                        className="text-green-500 focus:ring-green-500"
+                      />
+                      <span className="ml-2 flex items-center gap-2">
+                        <Heart className="w-4 h-4" />
+                        Donor
+                      </span>
+                    </label>
+                  </div>
+                </div>
 
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -466,38 +357,18 @@ const AuthPage = () => {
                   </button>
                 </div>
 
-                {!isLogin && (
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      placeholder="Confirm Password"
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
-                      required={!isLogin}
-                    />
-                  </div>
-                )}
-
-                {isLogin && (
-                  <div className="flex items-center justify-between text-sm">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        className="text-green-500 focus:ring-green-500"
-                      />
-                      <span className="ml-2 text-gray-600">Remember me</span>
-                    </label>
-                    <button
-                      type="button"
-                      className="text-green-600 hover:text-green-700 font-semibold"
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
-                )}
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                    required
+                  />
+                </div>
 
                 <div className="flex justify-center">
                   <Button
@@ -505,43 +376,31 @@ const AuthPage = () => {
                     icon={<ArrowRight className="w-4 h-4" />}
                     className="hover:shadow-lg transform"
                     disabled={isLoading}
-                    title={
-                      isLoading
-                        ? isLogin
-                          ? "Signing In..."
-                          : "Creating Account..."
-                        : isLogin
-                        ? "Sign In"
-                        : "Create Account"
-                    }
+                    title={isLoading ? "Creating Account..." : "Create Account"}
                   />
                 </div>
 
-                {!isLogin && (
-                  <p className="text-xs text-gray-600 text-center">
-                    By creating an account, you agree to our{" "}
-                    <button className="text-green-600 hover:underline font-semibold">
-                      Terms of Service
-                    </button>{" "}
-                    and{" "}
-                    <button className="text-green-600 hover:underline font-semibold">
-                      Privacy Policy
-                    </button>
-                  </p>
-                )}
+                <p className="text-xs text-gray-600 text-center">
+                  By creating an account, you agree to our{" "}
+                  <button className="text-green-600 hover:underline font-semibold">
+                    Terms of Service
+                  </button>{" "}
+                  and{" "}
+                  <button className="text-green-600 hover:underline font-semibold">
+                    Privacy Policy
+                  </button>
+                </p>
               </form>
 
               <div className="mt-8 text-center">
                 <p className="text-gray-600">
-                  {isLogin
-                    ? "Don't have an account? "
-                    : "Already have an account? "}
+                  Already have an account?{" "}
                   <button
-                    onClick={toggleAuthMode}
+                    onClick={navigateToLogin}
                     className="text-green-600 hover:text-green-700 font-semibold hover:underline"
                     disabled={isLoading}
                   >
-                    {isLogin ? "Sign up" : "Sign in"}
+                    Sign in
                   </button>
                 </p>
               </div>
@@ -553,4 +412,4 @@ const AuthPage = () => {
   );
 };
 
-export default AuthPage;
+export default SignupPage;

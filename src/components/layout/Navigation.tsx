@@ -35,22 +35,6 @@ const Navbar: React.FC<NavbarProps> = () => {
   const mobileIconColor = isHomepage ? 'text-white' : 'text-gray-600';
   const hoverLineColor = isHomepage ? 'after:bg-white' : 'after:bg-gray-600';
 
-  // useEffect(() => {
-  //   // const handleScroll = (): void => {
-  //   //   if (window.scrollY > 5) {
-  //   //     setIsScrolled(true);
-  //   //   } else {
-  //   //     setIsScrolled(false);
-  //   //   }
-  //   // };
-
-  // //   window.addEventListener("scroll", handleScroll);
-
-  // //   // Cleanup
-  // //   return () => window.removeEventListener("scroll", handleScroll);
-  // // }, []);
-
-
   const toggleNavbar = (): void => {
     setIsOpen(!isOpen);
     setActiveDropdown(null);
@@ -69,13 +53,15 @@ const Navbar: React.FC<NavbarProps> = () => {
   };
 
   const handleLogin = (): void => {
-    router.push("/auth?mode=login");
+    router.push("/auth/login");
     closeDropdowns();
+    closeMenu();
   };
 
   const handleSignup = (): void => {
-    router.push("/auth?mode=signup");
+    router.push("/auth/signup");
     closeDropdowns();
+    closeMenu();
   };
 
   const handleLogout = (): void => {
@@ -154,7 +140,6 @@ const Navbar: React.FC<NavbarProps> = () => {
                 <ChevronDown className="w-3 h-3" />
               </button>
 
-
               {activeDropdown === "userMenu" && (
                 <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
                   <div className="px-4 py-3 border-b border-gray-100">
@@ -164,11 +149,11 @@ const Navbar: React.FC<NavbarProps> = () => {
                     <p className="text-xs text-gray-500">john@example.com</p>
                   </div>
                   <Link
-                    href="/dashboard"
+                    href="/profile"
                     className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
                   >
                     <User className="w-4 h-4" />
-                    My Dashboard
+                    My Profile
                   </Link>
                   <Link
                     href="/campaigns"
@@ -251,11 +236,11 @@ const Navbar: React.FC<NavbarProps> = () => {
                 How It Works
               </Link>
               <Link
-                href="/success-stories"
+                href="/pricing"
                 className="text-[16px] font-medium text-dark"
                 onClick={closeMenu}
               >
-                Success Stories
+                Pricing
               </Link>
               <Link
                 href="/about"
@@ -268,10 +253,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 
             {/* Mobile Auth Section */}
             {!isLoggedIn ? (
-              <div
-                className="flex flex-col items-center gap-6 mt-9 py-6 text-primary font-semibold text-[16px]"
-                onClick={closeMenu}
-              >
+              <div className="flex flex-col items-center gap-6 mt-9 py-6 text-primary font-semibold text-[16px]">
                 <button onClick={handleLogin} className="">
                   Login
                 </button>
@@ -300,12 +282,12 @@ const Navbar: React.FC<NavbarProps> = () => {
                 </div>
                 <div className="space-y-3">
                   <Link
-                    href="/dashboard"
+                    href="/profile"
                     className="flex items-center gap-3 text-gray-600 text-sm"
                     onClick={closeMenu}
                   >
                     <User className="w-4 h-4" />
-                    My Dashboard
+                    My Profile
                   </Link>
                   <Link
                     href="/campaigns"

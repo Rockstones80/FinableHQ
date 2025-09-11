@@ -1,2 +1,25 @@
 @import "tailwindcss";
 
+  /* For Firefox */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #ffffff13 transparent;
+  }
+  
+  /* For Internet Explorer and Edge */
+  .custom-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-color: transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 50px; /* Scrollbar width */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Scrollbar thumb color */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent; /* Scrollbar track color */
+  }

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   Bell,
@@ -12,9 +11,11 @@ import {
   Gift,
   Activity,
 } from "lucide-react";
+import KYCDashboardCards from "@/components/ui/CardCarosel";
 
 const DashboardOverview = () => {
   const [notifications] = useState(3);
+  const [showKYC, setShowKYC] = useState(true);
 
   // Mock data
   const stats = [
@@ -142,7 +143,6 @@ const DashboardOverview = () => {
             );
           })}
 
-
             {quickActions.map((action, index) => {
               const IconComponent = action.icon;
               return (
@@ -164,7 +164,12 @@ const DashboardOverview = () => {
               );
             })}
         </div>
-
+        <div className="pb-6">
+        <button className="flex items-center gap-3 px-4 py-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ml-auto" onClick={()=>setShowKYC(!showKYC)}>{showKYC? "Hide Account Verification":"Show Account Verification"}</button>
+        </div>
+        {showKYC && <div className="py-4">
+        <KYCDashboardCards className="py-4"/>
+        </div>}
           {/* {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           </div>
          Quick Actions

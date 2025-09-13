@@ -12,12 +12,12 @@ import {
   Link,
   Settings,
   Menu,
-  X,
-  Bell,
   User,
   LogOut,
   UserCircle,
   ChevronUp,
+  LucideIcon,
+  ChevronLeft,
 } from "lucide-react";
 
 interface User {
@@ -25,25 +25,20 @@ interface User {
   email: string;
   profilePic: string | null;
 }
-
-interface SubmenuItem {
-  id: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  href?: string;
-}
-
 interface MenuItem {
-  id: string;
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  section: string;
-  hasSubmenu?: boolean;
-  submenu?: SubmenuItem[];
-  hasNotifications?: boolean;
-  notificationCount?: number;
-  href?: string;
-}
+    id: string;
+    icon: LucideIcon;
+    label: string;
+    section: string;
+    href?: string;
+    hasSubmenu?: boolean;
+    submenu?: {
+      id: string;
+      label: string;
+      icon: LucideIcon;
+      href: string;
+    }[];
+  }
 
 interface SidebarContextType {
   isCollapsed: boolean;
@@ -171,15 +166,6 @@ const Sidebar: React.FC = () => {
       ],
     },
     {
-      id: "notifications",
-      icon: Bell,
-      label: "Notifications",
-      section: "main",
-      hasNotifications: true,
-      notificationCount: 3,
-      href: "/dashboard/notifications",
-    },
-    {
       id: "donations",
       icon: Heart,
       label: "Donations",
@@ -286,13 +272,13 @@ const Sidebar: React.FC = () => {
             )}
             <button
               onClick={toggleSidebar}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+              className="p-2 rounded-lg transition-colors duration-200"
               title={`${isCollapsed ? "Expand" : "Collapse"} sidebar (⌘/Ctrl + B)`}
             >
               {isCollapsed ? (
-                <Menu className="w-5 h-5 text-gray-600" />
+                <Menu className="w-5 h-5 cursor-pointer text-gray-600 hover:text-green-600" />
               ) : (
-                <X className="w-5 h-5 text-gray-600" />
+                <ChevronLeft className="w-7 h-7 cursor-pointer text-gray-600 hover:text-green-600" />
               )}
             </button>
           </div>
@@ -316,11 +302,11 @@ const Sidebar: React.FC = () => {
                       router.push(item.href);
                     }
                   }}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all duration-200 group relative overflow-hidden ${
+                  className={` cursor-pointer w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all duration-200 group relative overflow-hidden ${
                     isActive
                       ? "bg-green-600 text-white shadow-lg s transform scale-[1.02]"
                       : "text-gray-600 hover:bg-green-50 hover:text-gray-600 hover:transform hover:scale-[1.01]"
-                  }`}
+                  }`} title={item.id}
                 >
                   {/* Animated background */}
                   <div
@@ -338,16 +324,7 @@ const Sidebar: React.FC = () => {
                             : "text-gray-600 group-hover:text-gray-600"
                         }`}
                       />
-                      {/* Notification badge for icons */}
-                      {item.hasNotifications &&
-                        item.notificationCount &&
-                        isCollapsed && (
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                            {item.notificationCount > 9
-                              ? "9+"
-                              : item.notificationCount}
-                          </div>
-                        )}
+
                     </div>
                     {!isCollapsed && (
                       <span
@@ -361,16 +338,6 @@ const Sidebar: React.FC = () => {
                   </div>
 
                   <div className="flex items-center space-x-2 relative z-10">
-                    {/* Notification badge for expanded state */}
-                    {!isCollapsed &&
-                      item.hasNotifications &&
-                      item.notificationCount && (
-                        <div className="w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                          {item.notificationCount > 9
-                            ? "9+"
-                            : item.notificationCount}
-                        </div>
-                      )}
 
                     {!isCollapsed && item.hasSubmenu && (
                       <div
@@ -415,7 +382,7 @@ const Sidebar: React.FC = () => {
                                 router.push(subItem.href);
                               }
                             }}
-                            className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-all duration-200 group ${
+                            className={`w-full flex items-center space-x-3 px-3 py-2 cursor-pointer rounded-lg text-left transition-all duration-200 group ${
                               isSubActive
                                 ? "bg-green-100 text-green-700 font-medium"
                                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
@@ -446,14 +413,14 @@ const Sidebar: React.FC = () => {
             <div className="absolute bottom-full left-4 right-4 mb-2 bg-white border border-gray-200 rounded-xl shadow-lg py-2 z-50">
               <button
                 onClick={handleViewProfile}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200"
+                className="w-full flex items-center space-x-3 px-4 py-3 cursor-pointer text-left hover:bg-gray-50 transition-colors duration-200"
               >
                 <UserCircle className="w-4 h-4 text-gray-500" />
                 <span className="text-sm text-gray-700">View Profile</span>
               </button>
               <button
                 onClick={() => handleItemClick("settings")}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200"
+                className="w-full flex items-center space-x-3 px-4 py-3 cursor-pointer text-left hover:bg-gray-50 transition-colors duration-200"
               >
                 <Settings className="w-4 h-4 text-gray-500" />
                 <span className="text-sm text-gray-700">Settings</span>
@@ -461,7 +428,7 @@ const Sidebar: React.FC = () => {
               <hr className="my-2 mx-2 border-gray-100" />
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-red-50 transition-colors duration-200 text-red-600"
+                className="w-full flex items-center space-x-3 px-4 py-3 cursor-pointer text-left hover:bg-red-50 transition-colors duration-200 text-red-600"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="text-sm font-medium">Sign Out</span>
@@ -507,14 +474,14 @@ const Sidebar: React.FC = () => {
               {/* Menu items */}
               <button
                 onClick={handleViewProfile}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200"
+                className="w-full flex items-center space-x-3 cursor-pointer px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200"
               >
                 <UserCircle className="w-4 h-4 text-gray-500" />
                 <span className="text-sm text-gray-700">View Profile</span>
               </button>
               <button
                 onClick={() => handleItemClick("settings")}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200"
+                className="w-full flex items-center cursor-pointer space-x-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200"
               >
                 <Settings className="w-4 h-4 text-gray-500" />
                 <span className="text-sm text-gray-700">Settings</span>
@@ -522,7 +489,7 @@ const Sidebar: React.FC = () => {
               <hr className="my-2 mx-2 border-gray-100" />
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-red-50 transition-colors duration-200 text-red-600"
+                className="w-full cursor-pointer flex items-center space-x-3 px-4 py-3 text-left hover:bg-red-50 transition-colors duration-200 text-red-600"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="text-sm font-medium">Sign Out</span>
@@ -532,14 +499,14 @@ const Sidebar: React.FC = () => {
 
           <button
             onClick={handleProfileClick}
-            className={`w-full flex items-center ${isCollapsed ? "justify-center" : "justify-between space-x-3"} p-3 rounded-xl transition-all duration-200 group hover:bg-gray-50 ${
+            className={`w-full flex items-center cursor-pointer ${isCollapsed ? "justify-center" : "justify-between space-x-3"} p-3 rounded-xl transition-all duration-200 group hover:bg-gray-50 ${
               activeItem === "profile"
                 ? "bg-green-50 border border-green-200"
                 : ""
             }`}
           >
             {isCollapsed ? (
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0" title="profile">
                 {user.profilePic ? (
                   <img
                     src={user.profilePic}
@@ -561,7 +528,7 @@ const Sidebar: React.FC = () => {
             ) : (
               // profile layout for expanded state
               <>
-                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                <div className="flex items-center cursor-pointer space-x-3 flex-1 min-w-0">
                   <div className="flex-shrink-0">
                     {user.profilePic ? (
                       <img
@@ -595,7 +562,7 @@ const Sidebar: React.FC = () => {
                     showProfileMenu ? "rotate-180" : "rotate-0"
                   }`}
                 >
-                  <ChevronUp className="w-4 h-4 text-gray-400 group-hover:text-green-600" />
+                  <ChevronUp className="w-4 h-4 cursor-pointer text-gray-400 group-hover:text-green-600" />
                 </div>
               </>
             )}

@@ -12,10 +12,17 @@ import {
   Activity,
 } from "lucide-react";
 import KYCDashboardCards from "@/components/ui/CardCarosel";
+import NotificationPanel from "@/components/layout/NotificationPanel";
+import { dummyNotifications } from "@/types/notification";
 
 const DashboardOverview = () => {
-  const [notifications] = useState(3);
+  // FIX: Initialize with the array, not the length
+  const [notifications, setNotifications] = useState(dummyNotifications);
   const [showKYC, setShowKYC] = useState(true);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
+  // Now this will work because notifications is an array
+  const unreadCount = notifications.filter(n => n.unread).length;
 
   // Mock data
   const stats = [
@@ -74,7 +81,7 @@ const DashboardOverview = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 relative">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -83,14 +90,19 @@ const DashboardOverview = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <Bell className="w-5 h-5 text-gray-600" />
-              {notifications > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                  {notifications}
-                </span>
-              )}
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer " title="notifications"
+              >
+                <Bell className="w-5 h-5 text-gray-600" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </button>
+            </div>
 
             <div className="flex items-center space-x-3 bg-gray-100 rounded-full px-4 py-2">
               <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -107,6 +119,15 @@ const DashboardOverview = () => {
           </div>
         </div>
       </header>
+
+      {/* Notification Panel */}
+      
+      <NotificationPanel 
+        isOpen={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+        notifications={notifications}
+        setNotifications={setNotifications}
+      />
 
       {/* Main Content */}
       <main className="p-6 ">
@@ -143,41 +164,42 @@ const DashboardOverview = () => {
             );
           })}
 
-            {quickActions.map((action, index) => {
-              const IconComponent = action.icon;
-              return (
-                <button
-                  key={index}
-                  onClick={action.action}
-                  className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all hover:scale-[1.02] text-left group"
+          {quickActions.map((action, index) => {
+            const IconComponent = action.icon;
+            return (
+              <button
+                key={index}
+                onClick={action.action}
+                className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all hover:scale-[1.02] text-left group"
+              >
+                <div
+                  className={`${action.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
                 >
-                  <div
-                    className={`${action.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
-                  >
-                    <IconComponent className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="font-semibold text-gray-800 mb-2">
-                    {action.title}
-                  </h3>
-                  <p className="text-sm text-gray-500">{action.description}</p>
-                </button>
-              );
-            })}
+                  <IconComponent className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="font-semibold text-gray-800 mb-2">
+                  {action.title}
+                </h3>
+                <p className="text-sm text-gray-500">{action.description}</p>
+              </button>
+            );
+          })}
         </div>
+
         <div className="pb-6">
-        <button className="flex items-center gap-3 px-4 py-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ml-auto" onClick={()=>setShowKYC(!showKYC)}>{showKYC? "Hide Account Verification":"Show Account Verification"}</button>
+          <button 
+            className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-900 rounded-lg transition-colors cursor-pointer ml-auto" 
+            onClick={() => setShowKYC(!showKYC)}
+          >
+            {showKYC ? "Hide Account Verification" : "Show Account Verification"}
+          </button>
         </div>
-        {showKYC && <div className="py-4">
-        <KYCDashboardCards className="py-4"/>
-        </div>}
-          {/* {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        {showKYC && (
+          <div className="py-4">
+            <KYCDashboardCards className="py-4"/>
           </div>
-         Quick Actions
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">
-            Quick Actions
-          </h2>
-        </div> } */}
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* My Campaigns Section */}

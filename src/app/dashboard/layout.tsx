@@ -2,11 +2,13 @@
 import React from 'react';
 import Sidebar, { SidebarProvider } from '@/components/layout/sidebar';
 
+
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  
   return (
     <SidebarProvider>
       <div className="flex overflow-hidden h-screen">

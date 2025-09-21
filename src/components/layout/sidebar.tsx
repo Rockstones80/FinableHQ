@@ -171,15 +171,6 @@ const Sidebar: React.FC = () => {
       ],
     },
     {
-      id: "notifications",
-      icon: Bell,
-      label: "Notifications",
-      section: "main",
-      hasNotifications: true,
-      notificationCount: 3,
-      href: "/dashboard/notifications",
-    },
-    {
       id: "donations",
       icon: Heart,
       label: "Donations",

@@ -165,19 +165,12 @@ const DashboardOverview = () => {
             })}
         </div>
         <div className="pb-6">
-        <button className="flex items-center gap-3 px-4 py-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ml-auto" onClick={()=>setShowKYC(!showKYC)}>{showKYC? "Hide Account Verification":"Show Account Verification"}</button>
+        {/* <button className="flex items-center gap-3 px-4 py-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ml-auto" onClick={()=>setShowKYC(!showKYC)}>{showKYC? "Hide Account Verification":"Show Account Verification"}</button> */}
         </div>
         {showKYC && <div className="py-4">
         <KYCDashboardCards className="py-4"/>
         </div>}
-          {/* {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          </div>
-         Quick Actions
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-gray-800 mb-6">
-            Quick Actions
-          </h2>
-        </div> } */}
+
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* My Campaigns Section */}
@@ -301,7 +294,7 @@ const DashboardOverview = () => {
         </div>
 
         {/* Recent Activity */}
-        <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100">
+        {/* <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100">
           <div className="p-6 border-b border-gray-100">
             <h2 className="text-xl font-bold text-gray-800">Recent Activity</h2>
           </div>
@@ -316,7 +309,7 @@ const DashboardOverview = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </main>
     </div>
   );

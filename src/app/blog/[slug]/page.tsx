@@ -11,6 +11,7 @@ import { notFound } from 'next/navigation'
 // import Footer from "@/components/layout/Footer"
 import { Metadata } from 'next'
 import ClientMotionWrapper from './ClientMotionWrapper'
+import Navbar from '@/components/layout/Navigation'
 
 // Type for image blocks in portable text
 interface ImageBlock {
@@ -136,7 +137,10 @@ export default async function BlogPostPage({ params }: {
   }
   
   return (
-    <div className="bg-white">
+    <div className="bg-white ">
+        <Navbar />
+
+        <div className="pt-16 lg:pt-20">
       {/* Subtle background elements - Made non-interfering */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20 z-0">
         <div className="absolute top-32 right-32 w-32 h-32 border border-gray-100 rounded-full"></div>
@@ -386,8 +390,7 @@ export default async function BlogPostPage({ params }: {
           </div>
         </article>
       </ClientMotionWrapper>
-
-      {/* <Footer /> */}
+      </div>
     </div>
   )}
 

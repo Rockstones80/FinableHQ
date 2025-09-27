@@ -25,20 +25,21 @@ interface User {
   email: string;
   profilePic: string | null;
 }
+
 interface MenuItem {
+  id: string;
+  icon: LucideIcon;
+  label: string;
+  section: string;
+  href?: string;
+  hasSubmenu?: boolean;
+  submenu?: {
     id: string;
-    icon: LucideIcon;
     label: string;
-    section: string;
-    href?: string;
-    hasSubmenu?: boolean;
-    submenu?: {
-      id: string;
-      label: string;
-      icon: LucideIcon;
-      href: string;
-    }[];
-  }
+    icon: LucideIcon;
+    href: string;
+  }[];
+}
 
 interface SidebarContextType {
   isCollapsed: boolean;
@@ -47,6 +48,78 @@ interface SidebarContextType {
   collapseSidebar: () => void;
   expandSidebar: () => void;
 }
+
+interface SidebarProps {
+  menuItems?: MenuItem[];
+  user?: User;
+  logoText?: string;
+  onLogout?: () => void;
+  onViewProfile?: () => void;
+  onSettingsClick?: () => void;
+  className?: string;
+  defaultActiveItem?: string;
+  defaultExpandedMenus?: string[];
+}
+
+// Default menu items
+const defaultMenuItems: MenuItem[] = [
+  {
+    id: "dashboard",
+    icon: LayoutDashboard,
+    label: "Dashboard",
+    section: "main",
+    href: "/dashboard",
+  },
+  {
+    id: "campaigns",
+    icon: Megaphone,
+    label: "Campaigns",
+    section: "campaigns",
+    hasSubmenu: true,
+    submenu: [
+      {
+        id: "my-campaigns",
+        label: "My Campaigns",
+        icon: FolderOpen,
+        href: "/dashboard/campaign",
+      },
+      {
+        id: "create-campaign",
+        label: "Create Campaign",
+        icon: Plus,
+        href: "/dashboard/campaign/new",
+      },
+    ],
+  },
+  {
+    id: "donations",
+    icon: Heart,
+    label: "Donations",
+    section: "main",
+    href: "/dashboard/donations",
+  },
+  {
+    id: "earnings",
+    icon: DollarSign,
+    label: "Earnings",
+    section: "main",
+    href: "/dashboard/withdraw",
+  },
+  {
+    id: "payment-links",
+    icon: Link,
+    label: "Payment Links",
+    section: "main",
+    href: "/dashboard/payment-links",
+  },
+];
+
+// Default user
+const defaultUser: User = {
+  name: "John Doe",
+  email: "john.doe@example.com",
+  profilePic: null,
+};
 
 // Create the context
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
@@ -122,71 +195,22 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 // Enhanced Sidebar Component
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<SidebarProps> = ({
+  menuItems = defaultMenuItems,
+  user = defaultUser,
+  logoText = "Finable",
+  onLogout,
+  onViewProfile,
+  onSettingsClick,
+  className = "",
+  defaultActiveItem = "dashboard",
+  defaultExpandedMenus = ["campaigns"],
+}) => {
   const router = useRouter();
   const { isCollapsed, isMobile, toggleSidebar } = useSidebar();
-  const [activeItem, setActiveItem] = useState<string>("dashboard");
-  const [expandedMenus, setExpandedMenus] = useState<string[]>(["campaigns"]);
+  const [activeItem, setActiveItem] = useState<string>(defaultActiveItem);
+  const [expandedMenus, setExpandedMenus] = useState<string[]>(defaultExpandedMenus);
   const [showProfileMenu, setShowProfileMenu] = useState<boolean>(false);
-
-  // Mock user data
-  const user: User = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    profilePic: null,
-  };
-
-  const menuItems: MenuItem[] = [
-    {
-      id: "dashboard",
-      icon: LayoutDashboard,
-      label: "Dashboard",
-      section: "main",
-      href: "/dashboard",
-    },
-    {
-      id: "campaigns",
-      icon: Megaphone,
-      label: "Campaigns",
-      section: "campaigns",
-      hasSubmenu: true,
-      submenu: [
-        {
-          id: "my-campaigns",
-          label: "My Campaigns",
-          icon: FolderOpen,
-          href: "/dashboard/campaign",
-        },
-        {
-          id: "create-campaign",
-          label: "Create Campaign",
-          icon: Plus,
-          href: "/dashboard/campaign/new",
-        },
-      ],
-    },
-    {
-      id: "donations",
-      icon: Heart,
-      label: "Donations",
-      section: "main",
-      href: "/dashboard/donations",
-    },
-    {
-      id: "earnings",
-      icon: DollarSign,
-      label: "Earnings",
-      section: "main",
-      href: "/dashboard/withdraw",
-    },
-    {
-      id: "payment-links",
-      icon: Link,
-      label: "Payment Links",
-      section: "main",
-      href: "/dashboard/payment-links",
-    },
-  ];
 
   const toggleSubmenu = (itemId: string): void => {
     setExpandedMenus((prev) =>
@@ -210,13 +234,29 @@ const Sidebar: React.FC = () => {
   };
 
   const handleLogout = (): void => {
-    console.log("Logging out...");
+    if (onLogout) {
+      onLogout();
+    } else {
+      console.log("Logging out...");
+    }
     setShowProfileMenu(false);
   };
 
   const handleViewProfile = (): void => {
-    console.log("Viewing profile...");
+    if (onViewProfile) {
+      onViewProfile();
+    } else {
+      console.log("Viewing profile...");
+    }
     setShowProfileMenu(false);
+  };
+
+  const handleSettingsClick = (): void => {
+    if (onSettingsClick) {
+      onSettingsClick();
+    } else {
+      router.push('../dashboard/settings'); // Navigate to settings route
+    }
   };
 
   // Handle overlay click on mobile
@@ -253,12 +293,13 @@ const Sidebar: React.FC = () => {
 
       <div
         className={`
-        bg-white border-r border-gray-100 shadow-xl transition-all duration-300 ease-in-out 
-        relative h-screen flex flex-col z-50
-        ${isMobile ? "fixed" : "relative"}
-        ${isCollapsed ? (isMobile ? "-translate-x-full" : "w-20") : "w-70"}
-        ${isMobile && !isCollapsed ? "translate-x-0" : ""}
-      `}
+          bg-white border-r border-gray-100 shadow-xl transition-all duration-300 ease-in-out 
+          relative h-screen flex flex-col z-50
+          ${isMobile ? "fixed" : "relative"}
+          ${isCollapsed ? (isMobile ? "-translate-x-full" : "w-20") : "w-70"}
+          ${isMobile && !isCollapsed ? "translate-x-0" : ""}
+          ${className}
+        `}
       >
         {/* Header */}
         <div className="p-6 border-b border-gray-50">
@@ -266,7 +307,7 @@ const Sidebar: React.FC = () => {
             {!isCollapsed && (
               <div className="flex items-center space-x-3">
                 <div>
-                  <h1 className="text-xl font-bold text-green-600">Finable</h1>
+                  <h1 className="text-xl font-bold text-green-600">{logoText}</h1>
                 </div>
               </div>
             )}
@@ -302,16 +343,17 @@ const Sidebar: React.FC = () => {
                       router.push(item.href);
                     }
                   }}
-                  className={` cursor-pointer w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all duration-200 group relative overflow-hidden ${
+                  className={`cursor-pointer w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all duration-200 group relative overflow-hidden ${
                     isActive
-                      ? "bg-green-600 text-white shadow-lg s transform scale-[1.02]"
+                      ? "bg-green-600 text-white shadow-lg transform scale-[1.02]"
                       : "text-gray-600 hover:bg-green-50 hover:text-gray-600 hover:transform hover:scale-[1.01]"
-                  }`} title={item.id}
+                  }`}
+                  title={item.label}
                 >
                   {/* Animated background */}
                   <div
                     className={`absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-600 transform transition-transform duration-300 ${
-                      isActive ? "-translate-x-0" : "translate-x-full "
+                      isActive ? "-translate-x-0" : "translate-x-full"
                     }`}
                   />
 
@@ -324,7 +366,6 @@ const Sidebar: React.FC = () => {
                             : "text-gray-600 group-hover:text-gray-600"
                         }`}
                       />
-
                     </div>
                     {!isCollapsed && (
                       <span
@@ -338,7 +379,6 @@ const Sidebar: React.FC = () => {
                   </div>
 
                   <div className="flex items-center space-x-2 relative z-10">
-
                     {!isCollapsed && item.hasSubmenu && (
                       <div
                         className={`transition-transform duration-200 ${
@@ -346,7 +386,11 @@ const Sidebar: React.FC = () => {
                         }`}
                       >
                         <svg
-                          className={`w-4 h-4 ${isActive ? "text-white" : "text-gray-400 group-hover:text-green-600"}`}
+                          className={`w-4 h-4 ${
+                            isActive
+                              ? "text-white"
+                              : "text-gray-400 group-hover:text-green-600"
+                          }`}
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -419,7 +463,7 @@ const Sidebar: React.FC = () => {
                 <span className="text-sm text-gray-700">View Profile</span>
               </button>
               <button
-                onClick={() => handleItemClick("settings")}
+                onClick={handleSettingsClick}
                 className="w-full flex items-center space-x-3 px-4 py-3 cursor-pointer text-left hover:bg-gray-50 transition-colors duration-200"
               >
                 <Settings className="w-4 h-4 text-gray-500" />
@@ -480,7 +524,7 @@ const Sidebar: React.FC = () => {
                 <span className="text-sm text-gray-700">View Profile</span>
               </button>
               <button
-                onClick={() => handleItemClick("settings")}
+                onClick={handleSettingsClick}
                 className="w-full flex items-center cursor-pointer space-x-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200"
               >
                 <Settings className="w-4 h-4 text-gray-500" />
@@ -499,7 +543,9 @@ const Sidebar: React.FC = () => {
 
           <button
             onClick={handleProfileClick}
-            className={`w-full flex items-center cursor-pointer ${isCollapsed ? "justify-center" : "justify-between space-x-3"} p-3 rounded-xl transition-all duration-200 group hover:bg-gray-50 ${
+            className={`w-full flex items-center cursor-pointer ${
+              isCollapsed ? "justify-center" : "justify-between space-x-3"
+            } p-3 rounded-xl transition-all duration-200 group hover:bg-gray-50 ${
               activeItem === "profile"
                 ? "bg-green-50 border border-green-200"
                 : ""
@@ -526,7 +572,6 @@ const Sidebar: React.FC = () => {
                 )}
               </div>
             ) : (
-              // profile layout for expanded state
               <>
                 <div className="flex items-center cursor-pointer space-x-3 flex-1 min-w-0">
                   <div className="flex-shrink-0">

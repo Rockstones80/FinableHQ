@@ -133,7 +133,7 @@ const DashboardOverview = () => {
       {/* Main Content */}
       <main className="p-6 ">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
@@ -187,7 +187,7 @@ const DashboardOverview = () => {
           })}
         </div>
 
-        <div className="pb-6">
+        {/* <div className="pb-6">
           <button
             className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-900 rounded-lg transition-colors cursor-pointer ml-auto"
             onClick={() => setShowKYC(!showKYC)}
@@ -196,10 +196,10 @@ const DashboardOverview = () => {
               ? "Hide Account Verification"
               : "Show Account Verification"}
           </button>
-        </div>
+        </div> */}
 
         {showKYC && (
-          <div className="py-4">
+          <div className="">
             <KYCDashboardCards className="py-4" />
           </div>
         )}

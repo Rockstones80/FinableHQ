@@ -163,10 +163,10 @@ export default function KYCDashboardCards({ className }: KYCDashboardCardsProps)
   }
 
   return (
-    <div className={`space-y-6 ${className || ''}`}>
+    <div className={`space-y-4 ${className || ''}`}>
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold text-gray-900">Account Verification</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Account Verification</h2>
           <p className="text-gray-600 mt-1">Complete the following steps to begin your campaign</p>
         </div>
         <div className="text-right">

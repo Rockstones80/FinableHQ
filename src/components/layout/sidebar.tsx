@@ -26,19 +26,19 @@ interface User {
   profilePic: string | null;
 }
 interface MenuItem {
+  id: string;
+  icon: LucideIcon;
+  label: string;
+  section: string;
+  href?: string;
+  hasSubmenu?: boolean;
+  submenu?: {
     id: string;
-    icon: LucideIcon;
     label: string;
-    section: string;
-    href?: string;
-    hasSubmenu?: boolean;
-    submenu?: {
-      id: string;
-      label: string;
-      icon: LucideIcon;
-      href: string;
-    }[];
-  }
+    icon: LucideIcon;
+    href: string;
+  }[];
+}
 
 interface SidebarContextType {
   isCollapsed: boolean;
@@ -155,13 +155,13 @@ const Sidebar: React.FC = () => {
           id: "my-campaigns",
           label: "My Campaigns",
           icon: FolderOpen,
-          href: "/dashboard/campaign",
+          href: "/dashboard/campaigns",
         },
         {
           id: "create-campaign",
           label: "Create Campaign",
           icon: Plus,
-          href: "/dashboard/campaign/new",
+          href: "/dashboard/campaigns/new",
         },
       ],
     },
@@ -306,7 +306,8 @@ const Sidebar: React.FC = () => {
                     isActive
                       ? "bg-green-600 text-white shadow-lg s transform scale-[1.02]"
                       : "text-gray-600 hover:bg-green-50 hover:text-gray-600 hover:transform hover:scale-[1.01]"
-                  }`} title={item.id}
+                  }`}
+                  title={item.id}
                 >
                   {/* Animated background */}
                   <div
@@ -324,7 +325,6 @@ const Sidebar: React.FC = () => {
                             : "text-gray-600 group-hover:text-gray-600"
                         }`}
                       />
-
                     </div>
                     {!isCollapsed && (
                       <span
@@ -338,7 +338,6 @@ const Sidebar: React.FC = () => {
                   </div>
 
                   <div className="flex items-center space-x-2 relative z-10">
-
                     {!isCollapsed && item.hasSubmenu && (
                       <div
                         className={`transition-transform duration-200 ${

@@ -22,7 +22,7 @@ const DashboardOverview = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   // Now this will work because notifications is an array
-  const unreadCount = notifications.filter(n => n.unread).length;
+  const unreadCount = notifications.filter((n) => n.unread).length;
 
   // Mock data
   const stats = [
@@ -91,14 +91,15 @@ const DashboardOverview = () => {
 
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer " title="notifications"
+                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer "
+                title="notifications"
               >
                 <Bell className="w-5 h-5 text-gray-600" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
-                    {unreadCount > 9 ? '9+' : unreadCount}
+                    {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
               </button>
@@ -121,8 +122,8 @@ const DashboardOverview = () => {
       </header>
 
       {/* Notification Panel */}
-      
-      <NotificationPanel 
+
+      <NotificationPanel
         isOpen={isNotificationOpen}
         onClose={() => setIsNotificationOpen(false)}
         notifications={notifications}
@@ -132,7 +133,7 @@ const DashboardOverview = () => {
       {/* Main Content */}
       <main className="p-6 ">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
             return (
@@ -186,18 +187,20 @@ const DashboardOverview = () => {
           })}
         </div>
 
-        <div className="pb-6">
-          <button 
-            className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-900 rounded-lg transition-colors cursor-pointer ml-auto" 
+        {/* <div className="pb-6">
+          <button
+            className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-900 rounded-lg transition-colors cursor-pointer ml-auto"
             onClick={() => setShowKYC(!showKYC)}
           >
-            {showKYC ? "Hide Account Verification" : "Show Account Verification"}
+            {showKYC
+              ? "Hide Account Verification"
+              : "Show Account Verification"}
           </button>
-        </div>
+        </div> */}
 
         {showKYC && (
-          <div className="py-4">
-            <KYCDashboardCards className="py-4"/>
+          <div className="">
+            <KYCDashboardCards className="py-4" />
           </div>
         )}
 
@@ -323,7 +326,7 @@ const DashboardOverview = () => {
         </div>
 
         {/* Recent Activity */}
-        <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100">
+        {/* <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-100">
           <div className="p-6 border-b border-gray-100">
             <h2 className="text-xl font-bold text-gray-800">Recent Activity</h2>
           </div>
@@ -338,7 +341,7 @@ const DashboardOverview = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
       </main>
     </div>
   );

@@ -102,7 +102,7 @@ const PricingHero: React.FC = () => {
         <div className="floating-animation absolute top-40 right-60 w-22 h-22 bg-gradient-to-br from-green-200 to-green-400 rounded-full opacity-30 blur-sm"></div>
         <div className="floating-animation absolute bottom-60 left-32 w-16 h-16 bg-gradient-to-tr from-green-100 to-green-300 rounded-full opacity-40"></div>
       </div>
-      <div className="max-w-4xl mx-auto text-center">
+      <div className="max-w-4xl mx-auto text-center mt-16">
         <div className="slide-in-up">
           <h1 className="text-6xl font-extrabold text-black mb-4">
             Simple, <span className="text-green-600">Transparent</span> Pricing

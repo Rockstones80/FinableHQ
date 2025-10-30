@@ -46,7 +46,7 @@ const HeroSection: React.FC<HeroSectionProps> = () => {
         }
       `}</style>
 
-      <section className="pb-16 px-20 py-7 mt-16">
+      <section className="pb-16 px-20 py-7 mt-32">
         <div className="max-w-6xl mx-auto text-center">
           <div className="slide-in-up">
             <h1 className="text-6xl font-extrabold text-black">
